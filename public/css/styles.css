@@ -1,0 +1,225 @@
+.customRadio{
+    position:relative;
+    top:3px;
+}
+
+.customRadioAlign{
+    position:relative;
+    top:4px;
+    margin-right: 4px;
+}
+
+.wideInput{
+    width:100%;
+}
+
+.blueBackgroundTitle{
+    color:white; 
+    background-color:rgb(0, 100, 139)
+}
+
+.noPadding{
+    padding:0
+}
+
+.centerAlign{
+    vertical-align: center;
+    text-align: center;
+}
+
+.centerAlign tbody tr td a{
+    text-decoration-line: none;
+}
+
+.customBtn{
+    border: 0;
+}
+
+.customAlign tbody tr td:nth-child(2), .customAlign tbody tr td:first-child{
+    text-align: left;
+}
+
+.customAlign thead tr th, .customAlign tbody tr td{
+    vertical-align: center;
+    text-align: center;
+}
+
+.customAlign thead tr th{
+    border: 1px solid orange;
+}
+
+.customAlign thead tr th, .customAlign tbody tr td{
+    border-left: 1px solid orange;
+    border-right: 1px solid orange;
+}
+
+.customAlign tbody tr td a{
+    color: orange;
+}
+
+.customAlign tbody tr td a:hover{
+    text-decoration-line: underline;
+    color: lightskyblue;
+}
+
+.customAlign tbody + tbody{
+    border-top: 0;
+}
+
+
+
+html, body{
+    background: linear-gradient(90deg, rgba(241,229,234,1) 0%, rgba(196,223,228,0.944397742006959) 100%); 
+}
+
+.mt-6{
+    margin-top: 6%;
+}
+
+.mt-9{
+    margin-top: 9%;
+}
+
+.top5{
+    position: relative;
+    top: 25%;
+}
+
+#arrowDown{
+    position: fixed;
+    left: 30px;
+    color: black;
+    /* z-index: 999; */
+}
+
+#arrowDown:hover{
+    text-decoration-line: none;
+    color: gray;
+}
+
+#arrowUp{
+    /* position: relative; */
+    /* left: 10px; */
+    color: black;
+}
+
+#arrowUp:hover{
+    text-decoration-line: none;
+    color: gray;
+}
+
+#myInput{
+    position: fixed;
+    right: 30px;
+}
+
+/* Flex container images with overflow and proper breakpoints/fully responsive */
+
+.custom.card{
+    height: 400px;
+}
+
+.custom.card-top{
+    flex: 1 0 60%;
+    max-height: 60%;
+    text-align: center;
+}
+
+.custom.card-img-top{
+    width: 100%;
+    height: 100%;
+    object-position: 50% top;
+    object-fit: cover;
+
+    /* display: block;
+    border: none !important;
+    padding: 0rem 0 !important;  */
+}
+
+.custom.card-body{
+    flex: 1 0 40%;
+    max-height: calc(40% - 2rem);
+    overflow: auto;
+}
+
+.grayBackG{
+    background: rgb(200, 199, 199);
+}
+
+.whiteBackG{
+    background: rgb(240, 240, 240);
+}
+
+.verify{
+    padding: 0;
+}
+
+/* CSS from stack-overflow */
+/* .card {
+    height: 400px;
+  }
+  
+.card-top {
+    flex: 1 0 30% !important;
+    max-height: 30% !important;
+    text-align: center;
+}
+
+img {
+    display: block;
+    border: none !important;
+    width: 100%;
+    height: 100%;
+    object-position: 50% top;
+    object-fit: cover;
+    padding: 0rem 0 !important;
+}
+
+.card-body {
+    flex: 1 0 70% !important;
+    max-height: calc(70% - 2rem) !important;
+    overflow: auto;
+    margin: 1rem 0 !important;
+    padding: 0rem 1rem !important;
+}
+
+--------------- UNNECESARY ------------------
+
+.img-container {
+    flex: 1 0 30% !important;
+    /* max-height: 30% !important; // <-- Alternative*/
+    /* overflow: hidden;
+}
+
+.card-body {
+    flex: 1 0 60% !important;
+    /* max-height: 60% !important; // <-- Alternative, though still need to control overflow*/
+    /* overflow: auto;
+}
+
+#imgUNcover {
+    width: 100%;
+    height: 100%;
+    object-position: 50% top;
+    object-fit: cover;
+} */ 
+
+.custom-card{
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    min-width:0;word-wrap:break-word;
+    background-color:#fff;
+    background-clip:border-box;
+    border:1px solid rgba(0,0,0,.125);
+    border-radius:.25rem
+}
+
+.custom.card-header{
+    background-color:rgba(0,0,0,.03);
+    border-bottom:1px solid rgba(0,0,0,.125)
+}
+
+.noMargin{
+    margin: 0;
+}

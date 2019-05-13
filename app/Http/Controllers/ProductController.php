@@ -336,6 +336,7 @@ class ProductController extends Controller
         $validator = Validator::make($request->all(), [
             'percentage' => 'bail|numeric|min:0.1|max:100',
             'comparison' => 'required',
+            'products' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -363,6 +364,18 @@ class ProductController extends Controller
                 }
             }
         }
+    }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages() {
+        return [
+            'title.required' => 'A title is required',
+            'body.required'  => 'A message is required',
+        ];
     }
 
     /**

@@ -149,10 +149,8 @@ $(document).ready(() => {
     // Form submit handler
     budgetForm.on('submit', (e) => {
         e.preventDefault();
-
         // let requestParams = {
         //     comparison: $('input[name="comparison"]:checked').val(),
-        //     percentage: $('input[name="percentage"]').val(),
         // }
 
         let formData = budgetForm.serializeArray();
@@ -218,6 +216,7 @@ $(document).ready(() => {
                             "click": function() { 
                                 $(this).dialog("close"); 
                                 console.log("Accepted")
+                                // Hacer petición a otra route con los datos devueltos *data*
                             } 
                         }
                     ],

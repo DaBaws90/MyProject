@@ -146,9 +146,9 @@ return [
         'comparison' => [
             'required' => 'You must select at least one comparison option (Debe seleccionar al menos una opción comparativa de precios)',
         ],
-        // 'products' => [
-        //     'required' => 'You need at least',
-        // ],
+        'products' => [
+            'required' => 'You need at least one product to generate an alternative budget <br/> (Necesita al menos un producto para generar un presupuesto alternativo)',
+        ],
     ],
 
     /*

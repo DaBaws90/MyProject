@@ -149,15 +149,24 @@ $(document).ready(() => {
     // Form submit handler
     budgetForm.on('submit', (e) => {
         e.preventDefault();
+        
         // let requestParams = {
         //     comparison: $('input[name="comparison"]:checked').val(),
+        // }
+
+        // let products = {!! json_encode($products) !!};
+
+        // for (let i = 0; i < products.length; i++) {
+        //     console.log(products[i]);
         // }
 
         let formData = budgetForm.serializeArray();
 
         formData.push({
             name: 'products',
-            value: {!! str_replace("'", "\'", json_encode($products)) !!},
+            // value: {!! str_replace("'", "\'", json_encode($products)) !!},
+            // value: {!! json_encode($products) !!},
+            value: JSON.stringify({!! json_encode($products) !!}),
         })
 
         let dialogParams = {
@@ -175,6 +184,9 @@ $(document).ready(() => {
             url: budgetForm.attr('action'),
             type: 'POST',
             data: formData,
+            // dataType: 'JSON',
+            // contentType: "json",
+            // processData: false,
             success: function( data, textStatus, jqXHR ) {
 
                 console.log(jqXHR);
@@ -293,12 +305,19 @@ $(document).ready(() => {
                 dialogParams.mssg = jqXHR.responseJSON.errors.percentage + " (Status code: " + jqXHR.status + ")";
                 break;
 
+            case 'products':
+                dialogParams.title = 'Validation error';
+                dialogParams.mssg = jqXHR.responseJSON.errors.products + " (Status code: " + jqXHR.status + ")";
+                break;
+
+            // Standard error (besides error validations)
             case 'error':
                 // console.log("ERROR CASE")
                 dialogParams.title = "Something went wrong (" + errorThrown + ")";
                 dialogParams.mssg = jqXHR.responseJSON.errors.mssg + " (Status code: " + jqXHR.status + ")";
                 break;
 
+            // Try / catch error or unknow error handler
             default:
                 // console.log("DEFAULT CASE")
                 dialogParams.title = "Something went wrong (Unknown failure)";
@@ -316,7 +335,7 @@ $(document).ready(() => {
         if (jqXHR.responseJSON ) {
             // Two possible errors
             if ( jqXHR.responseJSON.errors ) {
-                return jqXHR.responseJSON.errors.percentage ? 'percentage' : 'error';
+                return jqXHR.responseJSON.errors.percentage ? 'percentage' : jqXHR.responseJSON.errors.products ? 'products' : 'error';
             }
             else {
                 // If no errors exists, it must be a success

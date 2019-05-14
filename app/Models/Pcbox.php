@@ -38,7 +38,8 @@ class Pcbox extends Eloquent
 		'precio',
 		'referencia_fabricante',
 		'marca',
-		'enlace'
+		'enlace',
+		'subcategoria'
 	];
 
 	// Unused methods beacuse of the data handling structure

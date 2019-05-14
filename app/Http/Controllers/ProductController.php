@@ -154,8 +154,8 @@ class ProductController extends Controller
             $productsRefs = $this->explodeString($request->references);
 
             foreach ($productsRefs as $ref) {
-                $queryResult = DB::select("SELECT pcbox.codigo, pcbox.nombre, pcbox.precio, pcbox.enlace as enlace, pccomponentes.referencia_fabricante,
-                pccomponentes.precio as precioPccomp, pccomponentes.enlace as enlacePccomp FROM pcbox,pccomponentes WHERE pcbox.codigo LIKE '%".$this->trimAndFormat($ref)."%'
+                $queryResult = DB::select("SELECT pcbox.codigo, pcbox.nombre, pcbox.precio, pcbox.enlace as enlace, pcbox.subcategoria, pccomponentes.referencia_fabricante,
+                pccomponentes.precio as precioPccomp, pccomponentes.enlace as enlacePccomp FROM pcbox,pccomponentes WHERE pcbox.codigo LIKE '".$this->trimAndFormat($ref)."'
                 AND pcbox.referencia_fabricante = pccomponentes.referencia_fabricante");
 
                 if($queryResult){
@@ -276,7 +276,7 @@ class ProductController extends Controller
         }
 
         $tempList = DB::select(
-            "SELECT pcbox.codigo, pcbox.nombre, pcbox.precio, pcbox.enlace as enlace, pccomponentes.referencia_fabricante,
+            "SELECT pcbox.codigo, pcbox.nombre, pcbox.precio, pcbox.enlace as enlace, pcbox.subcategoria, pccomponentes.referencia_fabricante,
             pccomponentes.precio as precioPccomp, pccomponentes.enlace as enlacePccomp FROM pcbox,pccomponentes WHERE ("
             .$categoryQuery." pcbox.referencia_fabricante = pccomponentes.referencia_fabricante".$comparisonQuery.") "
             .$keywordQuery." ORDER BY pccomponentes.precio"
@@ -333,37 +333,51 @@ class ProductController extends Controller
         // return response()->json(['errors' => ['mssg' => 'Unable to update the record. Please, try again later.']], 422);
         // return response()->json(['success' => ['mssg' => "Alternative budget successfully generated. <br/> Click 'Ok' to get redirected, otherwise, click 'Cancel'"]], 200);
 
-        $validator = Validator::make($request->all(), [
-            'percentage' => 'bail|numeric|min:0.1|max:100',
+        // $validator = 
+        Validator::make($request->all(), [
+            'percentage' => 'bail|sometimes|numeric|min:0.1|max:100|nullable',
             'comparison' => 'required',
             'products' => 'required',
-        ]);
+        ])->validate();
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->messages()], 422);
-        }
+        // if ($validator->fails()) {
+        //     return response()->json(['errors' => $validator->messages()], 422);
+        // }
 
-        // Logic starts here
-        $familias = array();
+        // Logic starts here -------------------------------------------------------
+        $resultsArray = array();
+        $resultsArray['oldProducts'] = array();
+        $resultsArray['alternatives'] = array();
 
-        $operator = $request->comparison == 'lesser' ? '<' : '>=';
-        $comparisonQuery = " AND pcbox.precio ".$operator." pccomponentes.precio";
+        $operatorQuery = $request->comparison == 'lesser' ? " AND precio < " : " AND precio >= ";
 
-        $queryResult = DB::select(
-            "SELECT pcbox.codigo, pcbox.nombre, pcbox.precio, pcbox.enlace as enlace, pccomponentes.referencia_fabricante,
-            pccomponentes.precio as precioPccomp, pccomponentes.enlace as enlacePccomp 
-                FROM pcbox,pccomponentes 
-                WHERE 
-                ".$comparisonQuery." ORDER BY pcbox.precio"
-        );
+        foreach (json_decode($request->products) as $index => $product) {
+            # code...
+            array_push($resultsArray['oldProducts'], $product);
 
-        foreach( $request->products as $product ) {
-            if ($product->precio != 0) {
-                if ($product->precio ) {
+            $queryResult = DB::select(
+                "SELECT * FROM pcbox WHERE ( subcategoria LIKE '".$product->subcategoria."' 
+                    ".$operatorQuery." ".$product->precioPccomp.") ORDER BY precio"
+            );
 
-                }
+            if ($queryResult) {
+                array_push($resultsArray['alternatives'], $queryResult);
             }
+            
         }
+
+        dd($resultsArray);
+        return response()->json(['errors' => ['mssg' => $resultsArray]], 422);
+
+        $assoc_array = $this->totals($resultsArray);
+
+        $products = isset($assoc_array['products']) ? collect($assoc_array['products']) : array();
+        $totalPCB = isset($assoc_array['totalPCB']) ? $assoc_array['totalPCB'] : 0.0;
+        $totalPCC = isset($assoc_array['totalPCC']) ? $assoc_array['totalPCC'] : 0.0;
+        $totalDifference = isset($assoc_array['totalDifference']) ? $assoc_array['totalDifference'] : null;
+        $totalPercentage = isset($assoc_array['totalPercentage']) ? $assoc_array['totalPercentage'] : null;
+
+        
     }
 
     /**
@@ -371,12 +385,11 @@ class ProductController extends Controller
      *
      * @return array
      */
-    public function messages() {
-        return [
-            'title.required' => 'A title is required',
-            'body.required'  => 'A message is required',
-        ];
-    }
+    // public function messages() {
+    //     return [
+    //         'products.required' => 'You need at least one product to generate an alternative budget (Necesita al menos un producto para generar un presupuesto alternativo)',
+    //     ];
+    // }
 
     /**
      * Process text from an uploaded PDF (using smalot/pdfparser)

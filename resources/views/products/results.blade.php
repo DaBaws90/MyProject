@@ -282,6 +282,11 @@ $(document).ready(() => {
             success: function(response) {
                 console.info(response)
                 $('.container-fluid').html(response.view);
+                $("#indextable1").tablesorter({ 
+                    // sortList: [4,0],
+                    cssInfoBlock : "avoid-sort",  
+                });
+                searchBar();
             }
         });
     }
@@ -363,6 +368,14 @@ $(document).ready(() => {
 <!-- Table's search input script -->
 <script>
 $(document).ready(function(){
+    // We only call the function declared OUTSIDE because this way we can (and we'll do) reutilize it
+    searchBar();
+});
+</script>
+
+<script>
+// Declared outside anonymus function to reutilize the fucntion
+function searchBar(){
     // Event on keyup for the search input
     $('#myInput').on('keyup', function(){
         // Parse to lower case the input text
@@ -371,8 +384,8 @@ $(document).ready(function(){
         $('#indextable1 tbody tr').filter(function(){
             $(this).toggle($(this).text().toLowerCase().indexOf(text) > -1);
         });
-    });
-});
+    }); 
+} 
 </script>
 
 @endpush

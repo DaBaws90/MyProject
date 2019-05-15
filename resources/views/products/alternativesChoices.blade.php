@@ -26,17 +26,15 @@
                                 <tr scope="row">
                                     <th scope="col">Código</a></th>
                                     <th scope="col">Nombre</a></th>
-                                    <th scope="col">Referencia</a></th>
-                                    <th scope="col">Precio PCBox</a></th>
-                                    <th scope="col">Precio PCComponentes</a></th>
-                                    <th scope="col">Diferencia</a></th>
-                                    <th scope="col">Porcentaje</a></th>
+                                    <th scope="col">Precio</a></th>
                                 </tr>
                             </thead>
                             <tbody class="searchTable">
                                 @forelse($oldProducts as $index => $product)
                                     <tr scope="row">
-                                        <td>{{ $product['nombre'] }}</td>
+                                        <td>{{ $product['codigo'] }}</td>
+                                        <td><a target="_blank" href="{{ $product['enlace'] }}">{{ strtoupper($product['nombre']) }}</a></td>
+                                        <td>{{ $product['precio'] }}</td>
                                     </tr>
                                 @empty
                                     <tr scope="row">

@@ -50,6 +50,17 @@
                             </div>
                         </div>
                     </div>
+                    <hr>
+                    <div class="row mt-3">
+                        <div class="col-md-10 offset-md-1 text-center">
+                            <p>Mostrar articulos que contengan el/los término(s):</p>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <input class="wideInput" type="text" name="keyword" placeholder="Palabra(s) clave...">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <!-- Buttons -->
                 <div class="modal-footer">

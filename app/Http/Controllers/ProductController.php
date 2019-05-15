@@ -330,10 +330,7 @@ class ProductController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function generateAlternativeBudget(Request $request) {
-        // return response()->json(['errors' => ['mssg' => 'Unable to update the record. Please, try again later.']], 422);
-        // return response()->json(['success' => ['mssg' => "Alternative budget successfully generated. <br/> Click 'Ok' to get redirected, otherwise, click 'Cancel'"]], 200);
 
-        // $validator = 
         Validator::make($request->all(), [
             'percentage' => 'bail|sometimes|numeric|min:0.1|max:100|nullable',
             'comparison' => 'required',
@@ -347,35 +344,76 @@ class ProductController extends Controller
 
         // Logic starts here -------------------------------------------------------
         $resultsArray = array();
+
+        // Keyword's input value handler
+        $keywordQuery = "";
+
+        if ($request->keyword != null) {
+            
+            $keywordQuery = " AND (";
+
+            $kwordList = explode(' ', $request->keyword);
+
+            for ($i = 0; $i < count($kwordList) ; $i++) { 
+                if ($i < count($kwordList) - 1) {
+                    $keywordQuery = $keywordQuery . " (nombre LIKE '%".$kwordList[$i]."%') AND";
+                }
+                else {
+                    $keywordQuery = $keywordQuery . " (nombre LIKE '%".$kwordList[$i]."%') ";
+                }
+            }
+
+            $keywordQuery = $keywordQuery . ")";
+        }
+
+        // Comparison's input value handler
+        $operatorQuery = $request->comparison == 'lesser' ? " AND precio < " : " AND precio >= ";
+
+        // Alternative products handler
         $resultsArray['oldProducts'] = array();
         $resultsArray['alternatives'] = array();
 
-        $operatorQuery = $request->comparison == 'lesser' ? " AND precio < " : " AND precio >= ";
-
         foreach (json_decode($request->products) as $index => $product) {
-            # code...
+
             array_push($resultsArray['oldProducts'], $product);
 
             $queryResult = DB::select(
                 "SELECT * FROM pcbox WHERE ( subcategoria LIKE '".$product->subcategoria."' 
-                    ".$operatorQuery." ".$product->precioPccomp.") ORDER BY precio"
+                    ".$operatorQuery." ".$product->precioPccomp.") ".$keywordQuery." ORDER BY precio"
             );
 
-            if ($queryResult) {
-                array_push($resultsArray['alternatives'], $queryResult);
-            }
+            array_push($resultsArray['alternatives'], $queryResult ? $queryResult : null);
             
         }
-        dd($resultsArray);
+        // dd($resultsArray);
+        if ($resultsArray != null) {
+            return  response()->json(['success' => [
+                'mssg' => "Alternative budget successfully generated. <br/> Click 'Ok' to get redirected, otherwise, click 'Cancel'",
+                'results' => $resultsArray,
+            ]], 200);
+        }
+            
+        return response()->json(['errors' => ['mssg' => 'An error occured while generating the budget. Please, try again later.']], 500);
 
-        $assoc_array = $this->totals($resultsArray);
+    }
 
-        $products = isset($assoc_array['products']) ? collect($assoc_array['products']) : array();
-        $totalPCB = isset($assoc_array['totalPCB']) ? $assoc_array['totalPCB'] : 0.0;
-        $totalPCC = isset($assoc_array['totalPCC']) ? $assoc_array['totalPCC'] : 0.0;
-        $totalDifference = isset($assoc_array['totalDifference']) ? $assoc_array['totalDifference'] : null;
-        $totalPercentage = isset($assoc_array['totalPercentage']) ? $assoc_array['totalPercentage'] : null;
+    /**
+     * Shows the alternative budget results view
+     * 
+     * @param Ajax Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function showAlternativeResults(Request $request) {
 
+        $results = $request->results;
+
+        $oldProducts = $request->results['oldProducts'];
+        $alternatives  = $request->results['alternatives'];
+        
+        // dd($oldProducts);
+        return response()->json([
+            'view' => view('products.alternativesChoices', compact('oldProducts', 'alternatives'))->render()
+        ]);
     }
 
     /**

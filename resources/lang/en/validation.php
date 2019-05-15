@@ -138,7 +138,7 @@ return [
             'required' => 'You must select at least one record (Debe seleccionar al menos un usuario)',
         ],
         'percentage' => [
-            'required' => 'Percentage amount cannot be empty (Debe indicar un porcentaje)',
+            // 'required' => 'Percentage amount cannot be empty (Debe indicar un porcentaje)',
             'numeric' => 'Percentage must be a numeric value (El valor debe ser un número)',
             'min' => 'Percentage value must be 0.1 as minimum (El valor debe ser 0.1 como mínimo)',
             'max' => 'Percentage value must be 100 as maximun (El valor debe ser 100 como máximo)',
@@ -149,6 +149,10 @@ return [
         'products' => [
             'required' => 'You need at least one product to generate an alternative budget <br/> (Necesita al menos un producto para generar un presupuesto alternativo)',
         ],
+        'keyword' => [
+            'string' => 'Keyword needs to be a valid string (El formato de la palabra clave debe ser una cadena de texto)',
+            'max' => 'Keyword must contains 150 characters as maximum (La(s) palabra(s) clave debe(n) contener un máximo de 150 carácteres)',
+        ]
     ],
 
     /*

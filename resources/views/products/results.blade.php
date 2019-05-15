@@ -140,7 +140,7 @@ $(function() {
 <script>
 $(document).ready(() => {
 
-    // var btnModalTrigger = $('button[data-target="#budgetModal"]');
+    var btnModalTrigger = $('button[data-target="#budgetModal"]');
     var budgetForm = $('#budgetForm');
     // var tableCells = $('#indextable1 tbody tr td');
     // var tableTotals = $('.avoid-sort tr td');
@@ -150,16 +150,6 @@ $(document).ready(() => {
     budgetForm.on('submit', (e) => {
         e.preventDefault();
         
-        // let requestParams = {
-        //     comparison: $('input[name="comparison"]:checked').val(),
-        // }
-
-        // let products = {!! json_encode($products) !!};
-
-        // for (let i = 0; i < products.length; i++) {
-        //     console.log(products[i]);
-        // }
-
         let formData = budgetForm.serializeArray();
 
         formData.push({
@@ -179,14 +169,10 @@ $(document).ready(() => {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-
         $.ajax({
             url: budgetForm.attr('action'),
             type: 'POST',
             data: formData,
-            // dataType: 'JSON',
-            // contentType: "json",
-            // processData: false,
             success: function( data, textStatus, jqXHR ) {
 
                 console.log(jqXHR);
@@ -225,10 +211,12 @@ $(document).ready(() => {
                             } 
                         },
                         {  "text": "Ok",
-                            "click": function() { 
+                            "click": function(e) { 
                                 $(this).dialog("close"); 
-                                console.log("Accepted")
-                                // Hacer petición a otra route con los datos devueltos *data*
+                                console.log("Accepted => Redirecting...")
+                                // Calls AUX function for handling another Ajax call
+                                btnModalTrigger.click();
+                                onSuccess(data.success.results);
                             } 
                         }
                     ],
@@ -277,11 +265,26 @@ $(document).ready(() => {
             }
         })
 
-        // let test = tableCells.contents().filter(function() {
-        //     return this.data ? true : false;
-        // })
-
     });
+
+    // AUX function (Ajax call / request handler)
+    function onSuccess(data) {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.ajax({
+            url: "/products/choices",
+            type: 'POST',
+            data: { 'results': data },
+            success: function(response) {
+                console.info(response)
+                $('.container-fluid').html(response.view);
+            }
+        });
+    }
 
     // AUX function
     function setParams( jqXHR, errorThrown = null ) {
@@ -310,6 +313,11 @@ $(document).ready(() => {
                 dialogParams.mssg = jqXHR.responseJSON.errors.products + " (Status code: " + jqXHR.status + ")";
                 break;
 
+            case 'keyword':
+                dialogParams.title = 'Validation error';
+                dialogParams.mssg = jqXHR.responseJSON.errors.keyword + " (Status code: " + jqXHR.status + ")";
+                break;
+
             // Standard error (besides error validations)
             case 'error':
                 // console.log("ERROR CASE")
@@ -333,9 +341,9 @@ $(document).ready(() => {
     function errorsType( jqXHR ) {
 
         if (jqXHR.responseJSON ) {
-            // Two possible errors
+
             if ( jqXHR.responseJSON.errors ) {
-                return jqXHR.responseJSON.errors.percentage ? 'percentage' : jqXHR.responseJSON.errors.products ? 'products' : 'error';
+                return jqXHR.responseJSON.errors.percentage ? 'percentage' : jqXHR.responseJSON.errors.products ? 'products' : jqXHR.responseJSON.errors.keyword ? 'keyword' : 'error';
             }
             else {
                 // If no errors exists, it must be a success

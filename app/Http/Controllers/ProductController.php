@@ -338,6 +338,7 @@ class ProductController extends Controller
             'percentage' => 'bail|sometimes|numeric|min:0.1|max:100|nullable',
             'comparison' => 'required',
             'products' => 'required',
+            'keyword' => 'bail|sometimes|nullable|string|max:150',
         ])->validate();
 
         // if ($validator->fails()) {
@@ -365,9 +366,7 @@ class ProductController extends Controller
             }
             
         }
-
         dd($resultsArray);
-        return response()->json(['errors' => ['mssg' => $resultsArray]], 422);
 
         $assoc_array = $this->totals($resultsArray);
 
@@ -377,7 +376,6 @@ class ProductController extends Controller
         $totalDifference = isset($assoc_array['totalDifference']) ? $assoc_array['totalDifference'] : null;
         $totalPercentage = isset($assoc_array['totalPercentage']) ? $assoc_array['totalPercentage'] : null;
 
-        
     }
 
     /**

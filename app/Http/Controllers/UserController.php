@@ -294,9 +294,7 @@ class UserController extends Controller
 
                 $user->email_verified_at = Carbon::now()->toDateTimeString();
 
-                $success = $user->save();
-
-                if($success) {
+                if($user->save()) {
                     return redirect()->route('users.index')->with('success', ['success', 'The email was successfully verified.']);
                 }
                 else {

@@ -287,6 +287,7 @@ $(document).ready(() => {
                     cssInfoBlock : "avoid-sort",  
                 });
                 searchBar();
+                resizingSelect();
             }
         });
     }
@@ -365,7 +366,7 @@ $(document).ready(() => {
 });
 </script>
 
-<!-- Table's search input script -->
+<!-- Table's searchbar script -->
 <script>
 $(document).ready(function(){
     // We only call the function declared OUTSIDE because this way we can (and we'll do) reutilize it

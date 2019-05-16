@@ -97,6 +97,8 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::post('/products/choices', 'ProductController@showAlternativeResults')->name('choices');
 
+    Route::post('/products/alternatives', 'ProductController@processAlternativeBudget')->name('alternatives');
+
     // Resource controller methods routes
     Route::resource('products', 'ProductController');
 

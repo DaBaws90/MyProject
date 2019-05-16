@@ -223,3 +223,7 @@ img {
 .noMargin{
     margin: 0;
 }
+
+.choices option{
+    width: 50px;
+}

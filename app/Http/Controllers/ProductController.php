@@ -367,25 +367,55 @@ class ProductController extends Controller
         }
 
         // Comparison's input value handler
-        $operatorQuery = $request->comparison == 'lesser' ? " AND precio < " : " AND precio >= ";
+        $operatorQuery = $request->comparison == 'lesser' ? "AND precio > 0 AND precio < " : " AND precio >= ";
 
         // Alternative products handler
         $resultsArray['oldProducts'] = array();
         $resultsArray['alternatives'] = array();
+        $resultsArray['total'] = 0.0;
 
         foreach (json_decode($request->products) as $index => $product) {
 
+            $delta = 0.0;
+
+            $total = 0.0;
+
             array_push($resultsArray['oldProducts'], $product);
+
+            if ($request->percentage != null) {
+
+                switch ($request->comparison) {
+                    case 'lesser':
+                        $delta = $product->precioPccomp - (($product->precioPccomp * $request->percentage) / 100);
+                        // dd($delta);
+                        break;
+
+                    case 'greater':
+                        $delta = $product->precioPccomp + (($product->precioPccomp * $request->percentage) / 100);
+                        // dd($delta);
+                        break;
+                    
+                    default:
+                        # code...
+                        break;
+                }
+            }
+
+            $resultsArray['total'] += $product->precio;
+
+            $percentagequery = $delta == 0 ? $product->precioPccomp : $delta;
 
             $queryResult = DB::select(
                 "SELECT * FROM pcbox WHERE ( subcategoria LIKE '".$product->subcategoria."' 
-                    ".$operatorQuery." ".$product->precioPccomp.") ".$keywordQuery." ORDER BY precio"
+                    ".$operatorQuery." ".$percentagequery." AND precio > 0) ".$keywordQuery." ORDER BY precio"
             );
 
             array_push($resultsArray['alternatives'], $queryResult ? $queryResult : null);
             
         }
-        // dd($resultsArray);
+
+
+
         if ($resultsArray != null) {
             return  response()->json(['success' => [
                 'mssg' => "Alternative budget successfully generated. <br/> Click 'Ok' to get redirected, otherwise, click 'Cancel'",
@@ -409,11 +439,26 @@ class ProductController extends Controller
 
         $oldProducts = $request->results['oldProducts'];
         $alternatives  = $request->results['alternatives'];
+        $total = $request->results['total'];
         
-        // dd($oldProducts);
+        // dd($alternatives);
+
+        // $alternatives[0] = null;
         return response()->json([
-            'view' => view('products.alternativesChoices', compact('oldProducts', 'alternatives'))->render()
+            'view' => view('products.alternativesChoices', compact('oldProducts', 'alternatives', 'total'))->render()
         ]);
+    }
+
+    /**
+     * Proccess the alternatives and generates a budget with them
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function processAlternativeBudget(Request $request) {
+
+        dd("HOLA LUIS");
+        dd($request);
     }
 
     /**
@@ -492,7 +537,7 @@ class ProductController extends Controller
 
                 // Query the database with the extracted text as reference
                 $isRefOrNot = DB::select(DB::raw("SELECT pcbox.codigo, pcbox.nombre, pcbox.precio, pcbox.enlace as enlace, pccomponentes.referencia_fabricante, 
-                pccomponentes.precio as precioPccomp, pccomponentes.enlace as enlacePccomp 
+                pccomponentes.precio as precioPccomp, pccomponentes.enlace as enlacePccomp, pcbox.subcategoria 
                     FROM pccomponentes 
                     JOIN pcbox ON pccomponentes.referencia_fabricante = pcbox.referencia_fabricante 
                     WHERE pcbox.codigo = :ref"), array('ref' => $ref)

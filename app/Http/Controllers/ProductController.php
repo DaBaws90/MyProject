@@ -14,6 +14,8 @@ use Smalot\PdfParser\Parser;
 use App\Upload;
 // use Illuminate\Validation\Validator;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Database\Eloquent\Collection;
+use App\Models\Pcbox;
 
 class ProductController extends Controller
 {
@@ -367,20 +369,20 @@ class ProductController extends Controller
         }
 
         // Comparison's input value handler
-        $operatorQuery = $request->comparison == 'lesser' ? "AND precio > 0 AND precio < " : " AND precio >= ";
+        $operatorQuery = $request->comparison == 'lesser' ? " AND precio < " : " AND precio >= ";
 
         // Alternative products handler
-        $resultsArray['oldProducts'] = array();
-        $resultsArray['alternatives'] = array();
-        $resultsArray['total'] = 0.0;
+        $total = 0.0;
+        $totalPCC = 0.0;
+        // $resultsArray['oldProducts'] = array();
+        // $resultsArray['alternatives'] = array();
 
         foreach (json_decode($request->products) as $index => $product) {
+            $resultsArray[$index] = array();
+            $resultsArray['oldProducts'] = array();
+            $resultsArray['alternatives'] = array();
 
             $delta = 0.0;
-
-            $total = 0.0;
-
-            array_push($resultsArray['oldProducts'], $product);
 
             if ($request->percentage != null) {
 
@@ -401,25 +403,34 @@ class ProductController extends Controller
                 }
             }
 
-            $resultsArray['total'] += $product->precio;
-
             $percentagequery = $delta == 0 ? $product->precioPccomp : $delta;
 
+            // dd("SELECT * FROM pcbox WHERE ( subcategoria LIKE '".$product->subcategoria."' 
+            // ".$operatorQuery." ".$percentagequery." ) ".$keywordQuery." ORDER BY precio");
+
             $queryResult = DB::select(
-                "SELECT * FROM pcbox WHERE ( subcategoria LIKE '".$product->subcategoria."' 
-                    ".$operatorQuery." ".$percentagequery." AND precio > 0) ".$keywordQuery." ORDER BY precio"
+                "SELECT * FROM pcbox WHERE ( subcategoria LIKE '".$product->subcategoria."' AND precio NOT IN (0) 
+                    ".$operatorQuery." ".$percentagequery." ) ".$keywordQuery." ORDER BY precio"
             );
 
+            $total += $product->precio;
+            $totalPCC += $product->precioPccomp;
+
+            array_push($resultsArray['oldProducts'], $product);
             array_push($resultsArray['alternatives'], $queryResult ? $queryResult : null);
+
+            array_push($resultsArray[$index], $resultsArray['oldProducts']);
+            array_push($resultsArray[$index], $resultsArray['alternatives']);
             
         }
 
-
+        // dd($resultsArray['total']);
 
         if ($resultsArray != null) {
             return  response()->json(['success' => [
                 'mssg' => "Alternative budget successfully generated. <br/> Click 'Ok' to get redirected, otherwise, click 'Cancel'",
                 'results' => $resultsArray,
+                'totals' => array($total, $totalPCC),
             ]], 200);
         }
             
@@ -435,17 +446,15 @@ class ProductController extends Controller
      */
     public function showAlternativeResults(Request $request) {
 
-        $results = $request->results;
+        // $oldProducts = $request->results['oldProducts'];
+        // $alternatives  = $request->results['alternatives'];
 
-        $oldProducts = $request->results['oldProducts'];
-        $alternatives  = $request->results['alternatives'];
-        $total = $request->results['total'];
+        // $total = round($request->totals[0], 2, PHP_ROUND_HALF_UP);
+        // $totalPCC = round($request->totals[1], 2, PHP_ROUND_HALF_UP);
         
-        // dd($alternatives);
-
-        // $alternatives[0] = null;
         return response()->json([
-            'view' => view('products.alternativesChoices', compact('oldProducts', 'alternatives', 'total'))->render()
+            $request->results
+            // 'view' => view('products.alternativesChoices', compact('oldProducts', 'alternatives', 'total', 'totalPCC'))->render()
         ]);
     }
 
@@ -457,8 +466,22 @@ class ProductController extends Controller
      */
     public function processAlternativeBudget(Request $request) {
 
-        dd("HOLA LUIS");
-        dd($request);
+        // dd($request);
+
+        $products = collect();
+
+        foreach ($request->choices as $index => $productCode) {
+            # code...
+            if ($productCode != null) {
+                $existsOrNot = Pcbox::where('codigo', $productCode)->get();
+                // DB::select("SELECT * FROM pcbox WHERE")
+                if ($existsOrNot) {
+                    $products->push($existsOrNot[0]);
+                }
+            }
+        }
+
+        dd($products);
     }
 
     /**

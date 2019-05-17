@@ -27,9 +27,10 @@
                                 <thead>
                                     <tr scope="row">
                                         <!-- <th scope="col">#</th> -->
-                                        <th scope="col">Código</a></th>
-                                        <th scope="col">Nombre</a></th>
-                                        <th scope="col">Precio</a></th>
+                                        <th scope="col">Código</th>
+                                        <th scope="col">Nombre</th>
+                                        <th scope="col">Precio PCBox</th>
+                                        <th scope="col">Precio PCComp</th>
                                         <th scope="col">Alternativas</th>
                                     </tr>
                                 </thead>
@@ -41,11 +42,12 @@
                                             <td>{{ $product['codigo'] }}</td>
                                             <td><a target="_blank" href="{{ $product['enlace'] }}">{{ strtoupper($product['nombre']) }}</a></td>
                                             <td>{{ $product['precio'] }}</td>
+                                            <td>{{ $product['precioPccomp'] }}</td>
                                             <td>
                                                 <select name="choices[]" class="choices">
                                                     @if($alternatives[$index] != null)
                                                         @foreach($alternatives[$index] as $a)
-                                                            <option value="{{ $a['codigo'] }}">{{ $a['codigo'] }} - {{ strtoupper($a['nombre']) }} - {{ $a['precio'] }}</option>
+                                                            <option value="{{ $a['codigo'] }}">{{ $a['codigo'] }} - {{ strtoupper($a['nombre']) }} - {{ $a['precio'] }} €</option>
                                                         @endforeach
                                                     @else
                                                         <option value="{{ null }}">{{ __('No se encontraron alternativas para este producto') }}</option>
@@ -66,11 +68,13 @@
                                         <td></td>
                                         <td>{{ _("----------") }}</td>
                                         <td>{{ _("----------") }}</td>
+                                        <td>{{ _("----------") }}</td>
                                     </tr>
                                     <tr scope="row">
                                         <td></td>
                                         <td class="text-center">{{ _("Totales") }}</td>
                                         <td>{{ $total }}</td>
+                                        <td>{{ $totalPCC }}</td>
                                         <td></td>
                                     </tr>
                                 </tbody>

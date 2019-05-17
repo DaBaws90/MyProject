@@ -216,7 +216,7 @@ $(document).ready(() => {
                                 console.log("Accepted => Redirecting...")
                                 // Calls AUX function for handling another Ajax call
                                 btnModalTrigger.click();
-                                onSuccess(data.success.results);
+                                onSuccess(data.success);
                             } 
                         }
                     ],
@@ -269,6 +269,9 @@ $(document).ready(() => {
 
     // AUX function (Ajax call / request handler)
     function onSuccess(data) {
+
+        // console.info(data.results);
+        
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -278,16 +281,21 @@ $(document).ready(() => {
         $.ajax({
             url: "/products/choices",
             type: 'POST',
-            data: { 'results': data },
+            data: { 
+                'results': data.results,
+                'totals': data.totals
+            },
             success: function(response) {
-                console.info(response)
+                console.info(response);
                 $('.container-fluid').html(response.view);
                 $("#indextable1").tablesorter({ 
                     // sortList: [4,0],
                     cssInfoBlock : "avoid-sort",  
                 });
                 searchBar();
-                resizingSelect();
+            },
+            error: function(response) {
+                console.info(response);
             }
         });
     }

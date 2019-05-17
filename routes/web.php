@@ -97,6 +97,10 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::post('/products/choices', 'ProductController@showAlternativeResults')->name('choices');
 
+    // Redirect to home in case GET request to specific URL
+    Route::get('/products/alternatives', function() {
+        return redirect()->route('home');
+    });
     Route::post('/products/alternatives', 'ProductController@processAlternativeBudget')->name('alternatives');
 
     // Resource controller methods routes

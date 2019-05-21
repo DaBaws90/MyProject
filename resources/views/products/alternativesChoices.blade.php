@@ -39,15 +39,15 @@
                                         
                                         <tr scope="row">
                                             <!-- <td>{{ $index + 1}}</td> -->
-                                            <td>{{ $product['codigo'] }}</td>
-                                            <td><a target="_blank" href="{{ $product['enlace'] }}">{{ strtoupper($product['nombre']) }}</a></td>
-                                            <td>{{ $product['precio'] }}</td>
-                                            <td>{{ $product['precioPccomp'] }}</td>
+                                            <td>{{ $product->codigo }}</td>
+                                            <td><a target="_blank" href="{{ $product->enlace }}">{{ strtoupper($product->nombre) }}</a></td>
+                                            <td>{{ $product->precio }}</td>
+                                            <td>{{ $product->precioPccomp }}</td>
                                             <td>
                                                 <select name="choices[]" class="choices">
                                                     @if($alternatives[$index] != null)
                                                         @foreach($alternatives[$index] as $a)
-                                                            <option value="{{ $a['codigo'] }}">{{ $a['codigo'] }} - {{ strtoupper($a['nombre']) }} - {{ $a['precio'] }} €</option>
+                                                            <option value="{{ $a->codigo }}">{{ $a->codigo }} - {{ strtoupper($a->nombre) }} - {{ $a->precio }} €</option>
                                                         @endforeach
                                                     @else
                                                         <option value="{{ null }}">{{ __('No se encontraron alternativas para este producto') }}</option>

@@ -270,22 +270,21 @@ $(document).ready(() => {
     // AUX function (Ajax call / request handler)
     function onSuccess(data) {
 
-        // console.info(data.results);
-        
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-
         $.ajax({
             url: "/products/choices",
             type: 'POST',
             data: { 
-                'results': data.results,
+                'oldProducts': JSON.stringify(data.oldProducts),
+                'alternatives': JSON.stringify(data.alternatives),
                 'totals': data.totals
             },
             success: function(response) {
+                console.log("onSuccess JS method - success response")
                 console.info(response);
                 $('.container-fluid').html(response.view);
                 $("#indextable1").tablesorter({ 
@@ -295,6 +294,7 @@ $(document).ready(() => {
                 searchBar();
             },
             error: function(response) {
+                console.log("onSuccess JS method - error response")
                 console.info(response);
             }
         });

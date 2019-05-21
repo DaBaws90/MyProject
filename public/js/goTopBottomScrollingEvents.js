@@ -1,7 +1,7 @@
 
     $(document).ready(function(){
-        var arrowDown = document.getElementById("arrowDown");
-        var arrowUp = document.getElementById('arrowUp');
+        var arrowDown = $("#arrowDown");
+        var arrowUp = $('#arrowUp');
 
         // Shows the table with fadeIn animation
         $('#contentFadeIn').fadeIn(700);
@@ -19,20 +19,20 @@
 
             // On documents load, if scroll available is at least twice the height of the window, shows the goBottom arrow
             if(scrollAvail >= ($(window).height() * 2)){
-                $('#arrowDown').fadeIn(1000, function(){
+                $(arrowDown).fadeIn(1000, function(){
                     // On documents load, is current scroll position is nearly at bottom, shows the goTop arrow but on but only if the goBottom arrow was ever showed once
                     if(scrollPosition >= (scrollAvail - (scrollAvail / 5))) {
-                        $('#arrowUp').fadeIn(1000);
+                        $(arrowUp).fadeIn(1000);
                     }
                 });
 
                 // On window's scroll, check if scroll position is nearly at bottom and if it does, shows the goTop arrow. Otherwise, hides it
                 $(window).on('scroll', _.throttle(function() {
                     if(scrollPosition > (scrollAvail - ($(window).height() / 4))) {
-                        $('#arrowUp').fadeIn(1000);
+                        $(arrowUp).fadeIn(1000);
                     }
                     else{
-                        $('#arrowUp').fadeOut(100);
+                        $(arrowUp).fadeOut(100);
                     }
                 }, 350));
             }
@@ -81,10 +81,10 @@
         $('html, body').animate(
             {scrollTop: $(document).height()}, 200
         );
-        // $('#arrowUp').fadeIn(1000, () => {
+        // $(arrowUp).fadeIn(1000, () => {
         //     alert("ARRDOWN EVENT");
         // });
-        $('#arrowDown').fadeOut(100);
+        $(arrowDown).fadeOut(100);
         // PreventDefault avoids the default action on click event, which is visiting the hyperlink and filling the URL with an indicator (#)
         e.preventDefault();
     });
@@ -95,8 +95,8 @@
             {scrollTop: 0}, 200
         );
         // Shows the opposite arrow and hides itself
-        $('#arrowDown').fadeIn(1000);
-        $('#arrowUp').fadeOut(100);
+        $(arrowDown).fadeIn(1000);
+        $(arrowUp).fadeOut(100);
         // PreventDefault avoids the default action on click event, which is visiting the hyperlink and filling the URL with an indicator (#)
         e.preventDefault();
     });

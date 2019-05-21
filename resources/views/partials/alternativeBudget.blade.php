@@ -21,7 +21,7 @@
                                 <div class="col-md-8 offset-md-2">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <input class="customRadioAlign float-left" type="radio" name="comparison" id="comparativa-menor" value="lesser" checked>
+                                            <input class="customRadioAlign float-left" type="radio" name="comparison" id="comparativa-menor" value="lesser">
                                             <label class="float-left" for="comparativa-menor"> PC Box <= PcComponentes</label>
                                         </div>
                                     </div>
@@ -29,6 +29,12 @@
                                         <div class="col-md-12">
                                             <input class="customRadioAlign float-left" type="radio" name="comparison" id="comparativa-mayor" value="greater">
                                             <label class="float-left" for="comparativa-mayor"> PC Box > PcComponentes</label>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <input class="customRadioAlign float-left" type="radio" name="comparison" id="comparativa-all" value="all" checked>
+                                            <label class="float-left" for="comparativa-all"> Todos</label>
                                         </div>
                                     </div>
                                 </div>
@@ -43,7 +49,7 @@
                                     <div class="form-group row">
                                         <label class="col-md-3 col-form-label" for="porcentaje">Porcentaje:</label>
                                         <div class="col-md-9">
-                                            <input type="number" class="wideInput" min="0.1" max="100" step="0.1" lang="es" id="porcentaje" name="percentage">
+                                            <input type="number" class="wideInput" min="0" max="100" step="0.1" lang="es" id="porcentaje" name="percentage" value="0">
                                         </div>
                                     </div>
                                 </div>

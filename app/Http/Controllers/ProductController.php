@@ -334,7 +334,7 @@ class ProductController extends Controller
     public function generateAlternativeBudget(Request $request) {
 
         Validator::make($request->all(), [
-            'percentage' => 'bail|sometimes|numeric|min:0.1|max:100|nullable',
+            'percentage' => 'bail|sometimes|numeric|min:0|max:100|nullable',
             'comparison' => 'required',
             'products' => 'required',
             'keyword' => 'bail|sometimes|nullable|string|max:150',
@@ -368,68 +368,85 @@ class ProductController extends Controller
             $keywordQuery = $keywordQuery . ")";
         }
 
-        // Comparison's input value handler
-        $operatorQuery = $request->comparison == 'lesser' ? " AND precio < " : " AND precio >= ";
-
         // Alternative products handler
         $total = 0.0;
         $totalPCC = 0.0;
-        // $resultsArray['oldProducts'] = array();
-        // $resultsArray['alternatives'] = array();
+
+        $oldProducts = array();
+        $alternatives = array();
 
         foreach (json_decode($request->products) as $index => $product) {
-            $resultsArray[$index] = array();
-            $resultsArray['oldProducts'] = array();
-            $resultsArray['alternatives'] = array();
 
             $delta = 0.0;
 
-            if ($request->percentage != null) {
+            if ($request->percentage != 0) {
 
                 switch ($request->comparison) {
+
                     case 'lesser':
                         $delta = $product->precioPccomp - (($product->precioPccomp * $request->percentage) / 100);
-                        // dd($delta);
-                        break;
+                        $percentageQuery = " AND precio >= ".$delta." AND precio <= ".$product->precioPccomp;
 
+                        break;
+    
                     case 'greater':
                         $delta = $product->precioPccomp + (($product->precioPccomp * $request->percentage) / 100);
-                        // dd($delta);
+                        $percentageQuery = " AND precio <= ".$delta." AND precio >= ".$product->precioPccomp;
+
                         break;
                     
                     default:
-                        # code...
+                        $delta = $product->precioPccomp + (($product->precioPccomp * $request->percentage) / 100);
+                        $percentageQuery = " AND precio NOT IN (0) AND precio <= ".$delta;
+
                         break;
                 }
+
+            }
+            else {
+
+                switch ($request->comparison) {
+                    case 'lesser':
+                        $percentageQuery = " AND precio NOT IN (0) AND precio <= ".$product->precioPccomp;
+                        dd($percentageQuery);
+                        break;
+
+                    case 'greater':
+                        $percentageQuery = " AND precio >= ".$product->precioPccomp;
+                        dd($percentageQuery);
+                    
+                    default:
+                        $percentageQuery = " AND precio NOT IN (0)";
+                        dd($percentageQuery);
+                        break;
+                }
+
+                // $percentageQuery = 
+                // ($request->comparison == 'lesser') ? " AND precio NOT IN (0) AND precio <= ".$product->precioPccomp."" : ($request->comparison == 'greater') ? " AND precio >= ".$product->precioPccomp."" : " AND precio NOT IN (0)";
+
             }
 
-            $percentagequery = $delta == 0 ? $product->precioPccomp : $delta;
-
-            // dd("SELECT * FROM pcbox WHERE ( subcategoria LIKE '".$product->subcategoria."' 
-            // ".$operatorQuery." ".$percentagequery." ) ".$keywordQuery." ORDER BY precio");
+            dd("SELECT * FROM pcbox WHERE ( subcategoria LIKE '".$product->subcategoria."'  
+                ".$percentageQuery." ) ".$keywordQuery." ORDER BY precio");
 
             $queryResult = DB::select(
-                "SELECT * FROM pcbox WHERE ( subcategoria LIKE '".$product->subcategoria."' AND precio NOT IN (0) 
-                    ".$operatorQuery." ".$percentagequery." ) ".$keywordQuery." ORDER BY precio"
+                "SELECT * FROM pcbox WHERE ( subcategoria LIKE '".$product->subcategoria."'  
+                    ".$percentageQuery." ) ".$keywordQuery." ORDER BY precio"
             );
 
             $total += $product->precio;
             $totalPCC += $product->precioPccomp;
 
-            array_push($resultsArray['oldProducts'], $product);
-            array_push($resultsArray['alternatives'], $queryResult ? $queryResult : null);
+            array_push($oldProducts, $product);
+            array_push($alternatives, $queryResult ? $queryResult : null);
 
-            array_push($resultsArray[$index], $resultsArray['oldProducts']);
-            array_push($resultsArray[$index], $resultsArray['alternatives']);
-            
         }
 
-        // dd($resultsArray['total']);
-
-        if ($resultsArray != null) {
+        if ($oldProducts != null && $alternatives != null) {
             return  response()->json(['success' => [
                 'mssg' => "Alternative budget successfully generated. <br/> Click 'Ok' to get redirected, otherwise, click 'Cancel'",
-                'results' => $resultsArray,
+                'oldProducts' => collect($oldProducts),
+                'alternatives' => collect($alternatives),
                 'totals' => array($total, $totalPCC),
             ]], 200);
         }
@@ -446,15 +463,14 @@ class ProductController extends Controller
      */
     public function showAlternativeResults(Request $request) {
 
-        // $oldProducts = $request->results['oldProducts'];
-        // $alternatives  = $request->results['alternatives'];
+        $oldProducts = json_decode($request->oldProducts);
+        $alternatives  = json_decode($request->alternatives);
 
-        // $total = round($request->totals[0], 2, PHP_ROUND_HALF_UP);
-        // $totalPCC = round($request->totals[1], 2, PHP_ROUND_HALF_UP);
-        
+        $total = round($request->totals[0], 2, PHP_ROUND_HALF_UP);
+        $totalPCC = round($request->totals[1], 2, PHP_ROUND_HALF_UP);
+
         return response()->json([
-            $request->results
-            // 'view' => view('products.alternativesChoices', compact('oldProducts', 'alternatives', 'total', 'totalPCC'))->render()
+            'view' => view('products.alternativesChoices', compact('oldProducts', 'alternatives', 'total', 'totalPCC'))->render()
         ]);
     }
 
@@ -481,6 +497,7 @@ class ProductController extends Controller
             }
         }
 
+        // dd("PROCESS ALTERNATIVE BUDGET METHOD");
         dd($products);
     }
 
@@ -703,6 +720,7 @@ class ProductController extends Controller
             }
             else{
                 // Set values as null if no price has been set for current product
+                $totalPCC += $product->precioPccomp;
                 $products[$index]->difference = null;
                 $products[$index]->percentage = null;
             }

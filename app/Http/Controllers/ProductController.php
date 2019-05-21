@@ -385,49 +385,30 @@ class ProductController extends Controller
 
                     case 'lesser':
                         $delta = $product->precioPccomp - (($product->precioPccomp * $request->percentage) / 100);
-                        $percentageQuery = " AND precio >= ".$delta." AND precio <= ".$product->precioPccomp;
-
+                        $percentageQuery = " AND precio > ".$delta." AND precio <= ".$product->precioPccomp;
                         break;
     
                     case 'greater':
                         $delta = $product->precioPccomp + (($product->precioPccomp * $request->percentage) / 100);
-                        $percentageQuery = " AND precio <= ".$delta." AND precio >= ".$product->precioPccomp;
-
+                        $percentageQuery = " AND precio <= ".$delta." AND precio > ".$product->precioPccomp;
                         break;
                     
                     default:
                         $delta = $product->precioPccomp + (($product->precioPccomp * $request->percentage) / 100);
                         $percentageQuery = " AND precio NOT IN (0) AND precio <= ".$delta;
-
                         break;
                 }
 
             }
             else {
 
-                switch ($request->comparison) {
-                    case 'lesser':
-                        $percentageQuery = " AND precio NOT IN (0) AND precio <= ".$product->precioPccomp;
-                        dd($percentageQuery);
-                        break;
-
-                    case 'greater':
-                        $percentageQuery = " AND precio >= ".$product->precioPccomp;
-                        dd($percentageQuery);
-                    
-                    default:
-                        $percentageQuery = " AND precio NOT IN (0)";
-                        dd($percentageQuery);
-                        break;
-                }
-
-                // $percentageQuery = 
-                // ($request->comparison == 'lesser') ? " AND precio NOT IN (0) AND precio <= ".$product->precioPccomp."" : ($request->comparison == 'greater') ? " AND precio >= ".$product->precioPccomp."" : " AND precio NOT IN (0)";
+                $percentageQuery = ($request->comparison == 'lesser') ? " AND precio NOT IN (0) AND precio <= ".$product->precioPccomp 
+                    : (($request->comparison == "greater") ? " AND precio > ".$product->precioPccomp : " AND precio NOT IN (0)");
 
             }
 
-            dd("SELECT * FROM pcbox WHERE ( subcategoria LIKE '".$product->subcategoria."'  
-                ".$percentageQuery." ) ".$keywordQuery." ORDER BY precio");
+            // dd("SELECT * FROM pcbox WHERE ( subcategoria LIKE '".$product->subcategoria."'  
+            //     ".$percentageQuery." ) ".$keywordQuery." ORDER BY precio");
 
             $queryResult = DB::select(
                 "SELECT * FROM pcbox WHERE ( subcategoria LIKE '".$product->subcategoria."'  

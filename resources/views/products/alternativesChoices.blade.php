@@ -41,7 +41,7 @@
                                             <!-- <td>{{ $index + 1}}</td> -->
                                             <td>{{ $product->codigo }}</td>
                                             <td><a target="_blank" href="{{ $product->enlace }}">{{ strtoupper($product->nombre) }}</a></td>
-                                            <td>{{ $product->precio }}</td>
+                                            <td>{{ $product->precio != 0 ? $product->precio : __("Consultar") }}</td>
                                             <td>{{ $product->precioPccomp }}</td>
                                             <td>
                                                 <select name="choices[]" class="choices">
@@ -86,8 +86,10 @@
 
             <div class="row">
                 <div class="col-md-12 mb-5 mt-2">
-                    <div class="col-md-3">
-                        <a href="#" id="arrowUp" class="float-left mt-2" style="display:none;" title="Go top"><i class="fas fa-chevron-up"></i>{{ __(' Ir arriba') }}</a>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <a href="#" id="arrowUp" class="float-left mt-2" title="Go top"><i class="fas fa-chevron-up"></i>{{ __(' Ir arriba') }}</a>
+                        </div>
                     </div>
                     <div class="row noMargin">
                         <div class="col-md-6 offset-md-3 text-center mb-2">

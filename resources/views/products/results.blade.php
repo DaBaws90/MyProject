@@ -86,10 +86,12 @@
                     </div>
                     <div class="col-md-6 offset-md-3 text-center mb-2">
                         <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-block btn-outline-dark" data-toggle="modal" data-target="#budgetModal">
-                            {{ __('Generar alternativa') }}
-                        </button>
-                        @include('partials.alternativeBudget')
+                        @if ($generate)
+                            <button type="button" class="btn btn-block btn-outline-dark" data-toggle="modal" data-target="#budgetModal">
+                                {{ __('Generar alternativa') }}
+                            </button>
+                            @include('partials.alternativeBudget')
+                        @endif
                     </div>
                     <div class="row noMargin">
                         <div class="col-md-6 offset-md-3 text-center">
@@ -132,9 +134,6 @@ $(function() {
         });
     });
 </script>
-
-<!-- Custom Scripts to handle some events on scrolling -->
-<script src="{{ asset('js/goTopBottomScrollingEvents.js') }}"></script>
 
 <!-- Alternative Budget Modal -->
 <script>
@@ -292,6 +291,13 @@ $(document).ready(() => {
                     cssInfoBlock : "avoid-sort",  
                 });
                 searchBar();
+                $('html, body').animate(
+                    {scrollTop: 0}, 200
+                );
+                $('#arrowDown').fadeIn(1000);
+                arrowDown = document.getElementById("arrowDown");
+                arrowUp = document.getElementById('arrowUp');
+
             },
             error: function(response) {
                 console.log("onSuccess JS method - error response")
@@ -395,6 +401,16 @@ function searchBar(){
         });
     }); 
 } 
+</script>
+
+<!-- Custom Scripts to handle some events on scrolling -->
+<script src="{{ asset('js/goTopBottomScrollingEvents.js') }}"></script>
+
+<script>
+    $(document).ready(() => {
+        var arrowDown = document.getElementById("arrowDown");
+        var arrowUp = document.getElementById('arrowUp');
+    })
 </script>
 
 @endpush

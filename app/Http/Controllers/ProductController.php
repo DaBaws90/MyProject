@@ -178,7 +178,7 @@ class ProductController extends Controller
         // $this->showResults($request);
         // return json_encode($products);
         // return Datatables::of($products)->make(true);
-        return view('products.results', compact('products', 'totalPCB', 'totalPCC', 'totalDifference', 'totalPercentage'))->with('title', 'referencias');
+        return view('products.results', compact('products', 'totalPCB', 'totalPCC', 'totalDifference', 'totalPercentage'))->with(['title' => 'referencias', 'generate' => true]);
         
     }
 
@@ -322,7 +322,7 @@ class ProductController extends Controller
         $totalPercentage = $assoc_array['totalPercentage'];
         
         // Insert the data into the view and returns it
-        return view('products.results', compact('products', 'totalPCB', 'totalPCC', 'totalDifference', 'totalPercentage'))->with('title', 'familias');
+        return view('products.results', compact('products', 'totalPCB', 'totalPCC', 'totalDifference', 'totalPercentage'))->with(['title' => 'familias', 'generate' => true]);
     }
 
     /**
@@ -407,9 +407,6 @@ class ProductController extends Controller
 
             }
 
-            // dd("SELECT * FROM pcbox WHERE ( subcategoria LIKE '".$product->subcategoria."'  
-            //     ".$percentageQuery." ) ".$keywordQuery." ORDER BY precio");
-
             $queryResult = DB::select(
                 "SELECT * FROM pcbox WHERE ( subcategoria LIKE '".$product->subcategoria."'  
                     ".$percentageQuery." ) ".$keywordQuery." ORDER BY precio"
@@ -463,23 +460,28 @@ class ProductController extends Controller
      */
     public function processAlternativeBudget(Request $request) {
 
-        // dd($request);
-
         $products = collect();
 
         foreach ($request->choices as $index => $productCode) {
             # code...
             if ($productCode != null) {
                 $existsOrNot = Pcbox::where('codigo', $productCode)->get();
-                // DB::select("SELECT * FROM pcbox WHERE")
                 if ($existsOrNot) {
                     $products->push($existsOrNot[0]);
                 }
             }
         }
 
-        // dd("PROCESS ALTERNATIVE BUDGET METHOD");
-        dd($products);
+        $assoc_array = $this->totals($products);
+
+        $products = isset($assoc_array['products']) ? collect($assoc_array['products']) : array();
+        $totalPCB = isset($assoc_array['totalPCB']) ? $assoc_array['totalPCB'] : 0.0;
+        $totalPCC = isset($assoc_array['totalPCC']) ? $assoc_array['totalPCC'] : 0.0;
+        $totalDifference = isset($assoc_array['totalDifference']) ? $assoc_array['totalDifference'] : null;
+        $totalPercentage = isset($assoc_array['totalPercentage']) ? $assoc_array['totalPercentage'] : null;
+
+        return view('products.results', compact('products', 'totalPCB', 'totalPCC', 'totalDifference', 'totalPercentage'))->with(['title' => 'productos alternativos', 'generate' => false]);
+
     }
 
     /**
@@ -685,7 +687,7 @@ class ProductController extends Controller
      * @param Array containing products to operate with them
      * @return Array with desired values
      */
-    private function totals($products){
+    private function totals($products, $alternativeTotals = false){
 
         $totalPCB = 0.0; $totalPCC = 0.0;
 
@@ -694,29 +696,32 @@ class ProductController extends Controller
             // Check if the current product has a price set and, if not, avoid the division by zero, and set the values as null
             if($product->precio !=0){
                 // If price of current product has a value different than 0, set a pair key => value for both difference and percentage, and agrees prices to totals vars
-                $products[$index]->difference = $product->precioPccomp - $product->precio;
-                $products[$index]->percentage = round(($product->difference / $product->precio) * 100, 2);
-                $totalPCB += $product->precio;
-                $totalPCC += $product->precioPccomp;
+                if (!isset($product->precioPccomp)) {
+
+                    $product->difference = null;
+                    $product->percentage = null;
+                    $totalPCB += $product->precio;
+                }
+                else {
+                    $products[$index]->difference = $product->precioPccomp - $product->precio;
+                    $products[$index]->percentage = round(($product->difference / $product->precio) * 100, 2);
+                    $totalPCB += $product->precio;
+                    $totalPCC += $product->precioPccomp;
+                }
             }
             else{
                 // Set values as null if no price has been set for current product
-                $totalPCC += $product->precioPccomp;
+                $totalPCC = isset($product->precioPccomp) ? $totalPCC + $product->precioPccomp : null;
                 $products[$index]->difference = null;
                 $products[$index]->percentage = null;
             }
-            
-        }
+                
 
-        // Gets the total difference
-        $totalDifference = $totalPCC - $totalPCB;
+            // Gets the total difference
+            $totalDifference = $totalPCC != null ? $totalPCC - $totalPCB : null;
 
-        // Gets the total percentage if total price has a value, else, set value as null
-        if($totalPCB != 0){
-            $totalPercentage = round(($totalDifference / $totalPCB) * 100, 2);
-        }
-        else{
-            $totalPercentage = null;
+            $totalPercentage = $totalPCB != 0 ? round(($totalDifference / $totalPCB) * 100, 2) : null;
+
         }
 
         // Defines an array
@@ -730,38 +735,8 @@ class ProductController extends Controller
         $assoc_array['totalPercentage'] = $totalPercentage;
 
         return $assoc_array;
+
     }
-
-    // public function setArrayValues($assoc_array) {
-    //     $array = array();
-
-    //     $array['products'] = isset($assoc_array['products']) ? collect($assoc_array['products'])->sortBy('precioPccomp') : array();
-    //     $array['totalPCB'] = isset($assoc_array['totalPCB']) ? $assoc_array['totalPCB'] : 0.0;
-    //     $array['totalPCC'] = isset($assoc_array['totalPCC']) ? $assoc_array['totalPCC'] : 0.0;
-    //     $array['totalDifference'] = isset($assoc_array['totalDifference']) ? $assoc_array['totalDifference'] : null;
-    //     $array['totalPercentage'] = isset($assoc_array['totalPercentage']) ? $assoc_array['totalPercentage'] : null;
-        
-    //     return $array;
-    // }
-
-
-    /**
-     * Function for testing purpouses only
-     * 
-     * @return json containing listed resources
-     */
-    public function dummy(Request $request){
-        // Retrieving users data
-        $products = DB::table('users');
-
-        $products = [
-            'data' => $products->get()->all()
-        ];
-
-        // return Datatables::of(User::query())->make(true);
-        return json_encode($products);
-    }
-
     
 }
 

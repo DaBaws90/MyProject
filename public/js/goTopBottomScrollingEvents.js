@@ -16,20 +16,20 @@ $(document).ready(function(){
 
         // On documents load, if scroll available is at least twice the height of the window, shows the goBottom arrow
         if(scrollAvail >= ($(window).height() * 2)){
-            $('#arrowDown').fadeIn(1000, function(){
+            $(arrowDown).fadeIn(1000, function(){
                 // On documents load, is current scroll position is nearly at bottom, shows the goTop arrow but on but only if the goBottom arrow was ever showed once
                 if(scrollPosition >= (scrollAvail - (scrollAvail / 5))) {
-                    $('#arrowUp').fadeIn(1000);
+                    $(arrowUp).fadeIn(1000);
                 }
             });
 
             // On window's scroll, check if scroll position is nearly at bottom and if it does, shows the goTop arrow. Otherwise, hides it
             $(document).on('scroll', _.throttle(function() {
                 if(scrollPosition > (scrollAvail - ($(window).height() / 4))) {
-                    $('#arrowUp').fadeIn(1000);
+                    $(arrowUp).fadeIn(1000);
                 }
                 else{
-                    $('#arrowUp').fadeOut(100);
+                    $(arrowUp).fadeOut(100);
                 }
             }, 350));
         }
@@ -40,6 +40,7 @@ $(document).ready(function(){
             // Throtte some actions, in that case, call an auxilliar function every .35s
             showOrHideArrow();
             console.log("SCROLLING...")
+            // console.log($(window).scrollTop(), $(document).height(), $(window).height(), $(document).height() + $(window).height())
         }, 350));
 
     });
@@ -47,7 +48,18 @@ $(document).ready(function(){
     // Auxiliar function to check if arrowDown needs to be hidden or showed up, as the text appended to it
     function showOrHideArrow() {
 
-        if($(window).scrollTop() >= $(window).height() / 3){
+        if($(window).scrollTop() >= $(window).height() / 3 && ($(document).height() != ($(window).scrollTop() + $(window).height()))){
+            show();
+            
+            // if ($(document).height() == ($(window).scrollTop() + $(window).height())) {
+            //     hide();
+            // }
+        }
+        else{
+            hide();
+        }
+
+        function show() {
             arrowDown.style.color = "orange";
             arrowDown.style.zIndex = 999;
             arrowDown.style.fontWeight = "800";
@@ -59,13 +71,14 @@ $(document).ready(function(){
             arrowDown.style.background = "rgb(242, 243, 242, .15)";
             $('.hideableText').hide();
         }
-        else{
-            arrowDown.style.color = "black";
-            arrowDown.style.zIndex = 0;
-            arrowDown.style.fontWeight = "500";
-            arrowDown.style.borderRadius = "0";
-            arrowDown.style.padding = "0";
-            arrowDown.style.background = "none";
+
+        function hide() {
+            $(arrowDown).css('color', 'black')
+                .css('zIndex', 0)
+                .css('fontWeight', 500)
+                .css('borderRadius', 0)
+                .css('padding', 0)
+                .css('background', 'none')
             $('.hideableText').fadeIn(1200);
         }
     }
@@ -78,7 +91,7 @@ $(document).on('click', '#arrowDown', function(e){
     $('html, body').animate(
         {scrollTop: $(document).height()}, 200
     );
-    $('#arrowDown').fadeOut(100);
+    $(arrowDown).fadeOut(100);
     // PreventDefault avoids the default action on click event, which is visiting the hyperlink and filling the URL with an indicator (#)
     e.preventDefault();
 });
@@ -89,8 +102,8 @@ $(document).on('click', '#arrowUp', function(e){
         {scrollTop: 0}, 200
     );
     // Shows the opposite arrow and hides itself
-    $('#arrowDown').fadeIn(1000);
-    $('#arrowUp').fadeOut(100);
+    $(arrowDown).fadeIn(1000);
+    $(arrowUp).fadeOut(100);
     // PreventDefault avoids the default action on click event, which is visiting the hyperlink and filling the URL with an indicator (#)
     e.preventDefault();
 });

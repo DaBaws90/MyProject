@@ -43,10 +43,10 @@
                                         <td>{{ $product->codigo }}</td>
                                         <td><a target="_blank" class="customLinks" href="{{ $product->enlace }}">{{ strtoupper($product->nombre) }}</a></td>
                                         <td><a target="_blank" class="customLinks" href="{{ $product->enlacePccomp }}">{{ $product->referencia_fabricante}}</a></td>
-                                        <td>{{ $product->precio != null ? $product->precio : _("Consultar") }}</td>
-                                        <td>{{ $product->precioPccomp }}</td>
-                                        <td>{{ $product->difference != null ? round($product->difference, 2, PHP_ROUND_HALF_UP) : _(" --- ")}}</td>
-                                        <td>{{ $product->percentage != null ? "$product->percentage %"  :  _(" --- ")}}</td>
+                                        <td>{{ $product->precio ? $product->precio : _("Consultar") }}</td>
+                                        <td>{{ $product->precioPccomp ? $product->precioPccomp : __('---') }}</td>
+                                        <td>{{ $product->difference ? round($product->difference, 2, PHP_ROUND_HALF_UP) : _(" --- ")}}</td>
+                                        <td>{{ $product->percentage ? "$product->percentage %"  :  _(" --- ")}}</td>
                                     </tr>
                                 @empty
                                     <tr scope="row">
@@ -70,8 +70,8 @@
                                     <td>{{ _("Totales") }}</td>
                                     <td>{{ $totalPCB != 0 ? $totalPCB : _(" Sin importe ") }}</td>
                                     <td>{{ $totalPCC != 0 ? $totalPCC : _(" Sin importe ") }}</td>
-                                    <td>{{ $totalDifference != null ? round($totalDifference, 2, PHP_ROUND_HALF_UP) : _(" ---- ")}}</td>
-                                    <td>{{ $totalPercentage != null ? "$totalPercentage %" : _(" ---- ") }}</td>
+                                    <td>{{ $totalDifference ? round($totalDifference, 2, PHP_ROUND_HALF_UP) : _(" ---- ")}}</td>
+                                    <td>{{ $totalPercentage ? "$totalPercentage %" : _(" ---- ") }}</td>
                                 </tr>
                             </tbody>
                         </table>

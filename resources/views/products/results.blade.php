@@ -297,6 +297,7 @@ $(document).ready(() => {
                 $('#arrowDown').fadeIn(1000);
                 arrowDown = document.getElementById("arrowDown");
                 arrowUp = document.getElementById('arrowUp');
+                $('.choices').select2();
 
             },
             error: function(response) {

@@ -44,7 +44,7 @@
                                             <td>{{ $product->precio != 0 ? $product->precio : __("Consultar") }}</td>
                                             <td>{{ $product->precioPccomp }}</td>
                                             <td>
-                                                <select name="choices[]" class="choices">
+                                                <select name="choices[]" class="choices js-example-basic-single">
                                                     @if($alternatives[$index] != null)
                                                         @foreach($alternatives[$index] as $a)
                                                             <option value="{{ $a->codigo }}">{{ $a->codigo }} - {{ strtoupper($a->nombre) }} - {{ $a->precio }} €</option>

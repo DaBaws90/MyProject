@@ -715,27 +715,25 @@ class ProductController extends Controller
                 $products[$index]->difference = null;
                 $products[$index]->percentage = null;
             }
-                
-
-            // Gets the total difference
-            $totalDifference = $totalPCC != null ? $totalPCC - $totalPCB : null;
-
-            $totalPercentage = $totalPCB != 0 ? round(($totalDifference / $totalPCB) * 100, 2) : null;
-
         }
+        
+        // Gets the total difference
+        $totalDifference = $totalPCC != null ? $totalPCC - $totalPCB : null;
+        $totalPercentage = $totalPCB != 0 ? round(($totalDifference / $totalPCB) * 100, 2) : null;
 
         // Defines an array
         $assoc_array = array();
 
-        // Saves data into the associative array and returns it
-        $assoc_array['products'] = $products;
-        $assoc_array['totalPCB'] = $totalPCB;
-        $assoc_array['totalPCC'] = $totalPCC;
-        $assoc_array['totalDifference'] = $totalDifference;
-        $assoc_array['totalPercentage'] = $totalPercentage;
+        if($products) {
+            // Saves data into the associative array and returns it
+            $assoc_array['products'] = $products;
+            $assoc_array['totalPCB'] = $totalPCB;
+            $assoc_array['totalPCC'] = $totalPCC;
+            $assoc_array['totalDifference'] = $totalDifference;
+            $assoc_array['totalPercentage'] = $totalPercentage;
+        }
 
         return $assoc_array;
-
     }
     
 }

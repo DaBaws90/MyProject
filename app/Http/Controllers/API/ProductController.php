@@ -26,63 +26,165 @@ class ProductController extends Controller
      * @param \Illuminate\Http\Request  $request
      * @return JSON response
      */
-    public function references(Request $request) {
-        $products = array();
-        $totalPCB = 0.0; $totalPCC = 0.0; $totalDifference = 0.0; $totalPercentage = 0.0;
+    // public function references(Request $request) {
+        // $products = array();
+        // $totalPCB = 0.0; $totalPCC = 0.0; $totalDifference = 0.0; $totalPercentage = 0.0;
 
-        if($request->references != null){
-            $productsRefs = $this->explodeString($request->references);
+        // if($request->references != null){
+        //     $productsRefs = $this->explodeString($request->references);
 
-            foreach ($productsRefs as $ref) {
-                $existsOrNot = DB::select("SELECT pcbox.codigo, pcbox.nombre, pcbox.precio, pcbox.enlace as enlace, pccomponentes.referencia_fabricante,
-                    pccomponentes.precio as precioPccomp, pccomponentes.enlace as enlacePccomp FROM pcbox,pccomponentes WHERE pcbox.codigo LIKE '".$this->trimAndFormat($ref)."'
-                    AND pcbox.referencia_fabricante = pccomponentes.referencia_fabricante");
+        //     foreach ($productsRefs as $ref) {
+        //         $existsOrNot = DB::select("SELECT pcbox.codigo, pcbox.nombre, pcbox.precio, pcbox.enlace as enlace, pccomponentes.referencia_fabricante,
+        //             pccomponentes.precio as precioPccomp, pccomponentes.enlace as enlacePccomp FROM pcbox,pccomponentes WHERE pcbox.codigo LIKE '".$this->trimAndFormat($ref)."'
+        //             AND pcbox.referencia_fabricante = pccomponentes.referencia_fabricante");
 
-                if($existsOrNot) {
-                    array_push($products, $existsOrNot[0]);
+        //         if($existsOrNot) {
+        //             array_push($products, $existsOrNot[0]);
+        //         }
+        //     }
+
+    //         foreach ($products as $index => $product) {
+    //             # code...
+    //             $product->nombre = strtoupper($product->nombre);
+    //             if($product->precio !=0){
+    //                 $products[$index]->difference = round($product->precioPccomp - $product->precio, 2, PHP_ROUND_HALF_UP);
+    //                 $products[$index]->percentage = round(($product->difference / $product->precio) * 100, 2, PHP_ROUND_HALF_UP);
+    //                 $totalPCB += $product->precio;
+    //                 $totalPCC += $product->precioPccomp;
+    //             }
+    //             else{
+    //                 $products[$index]->precio = "Consultar";
+    //                 $products[$index]->difference = null;
+    //                 $products[$index]->percentage = null;
+    //             }
+                
+    //         }
+
+    //         $totalDifference = $totalPCC - $totalPCB;
+    //         if($totalPCB != 0){
+    //             $totalPercentage = round(($totalDifference / $totalPCB) * 100, 2);
+    //         }
+    //         else{
+    //             $totalPercentage = null;
+    //         }
+    //     }
+    //     else {
+    //         return response()->json(['error' => 'The search input was empty. Please, type something in order to search products']);
+    //     }
+
+    //     if(count($products) > 0) {
+    //         $results = array();
+    //         $results['products'] = $products;
+    //         $results['totalPCB'] = $totalPCB;
+    //         $results['totalPCC'] = $totalPCC;
+    //         $results['totalDifference'] = $totalDifference;
+    //         $results['totalPercentage'] = $totalPercentage;
+    //         return response()->json(['productsArray' => $results], 200);
+    //     }
+        
+    //     return response()->json(['error' => 'No products were found. Please, try again with different search parameters']);
+    // }
+
+    /**
+     * 
+     * Calculates the total prices and differences for the given products
+     * 
+     * @param Array containing products to operate with them
+     * @return Array with desired values
+     */
+    private function totals($products){
+
+        $totalPCB = 0.0; $totalPCC = 0.0;
+
+        // Iterates over the products
+        foreach ($products as $index => $product) {
+            $product->nombre = strtoupper($product->nombre);
+            // Check if the current product has a price set and, if not, avoid the division by zero, and set the values as null
+            if($product->precio !=0){
+                // If price of current product has a value different than 0, set a pair key => value for both difference and percentage, and agrees prices to totals vars
+                if (!isset($product->precioPccomp)) {
+
+                    $product->difference = null;
+                    $product->percentage = null;
+                    $totalPCB += $product->precio;
                 }
-            }
-
-            foreach ($products as $index => $product) {
-                # code...
-                $product->nombre = strtoupper($product->nombre);
-                if($product->precio !=0){
+                else {
                     $products[$index]->difference = round($product->precioPccomp - $product->precio, 2, PHP_ROUND_HALF_UP);
                     $products[$index]->percentage = round(($product->difference / $product->precio) * 100, 2, PHP_ROUND_HALF_UP);
                     $totalPCB += $product->precio;
                     $totalPCC += $product->precioPccomp;
                 }
-                else{
-                    $products[$index]->precio = "Consultar";
-                    $products[$index]->difference = null;
-                    $products[$index]->percentage = null;
+            }
+            else{
+                // Set values as null if no price has been set for current product
+                $totalPCC = isset($product->precioPccomp) ? $totalPCC + $product->precioPccomp : null;
+                $products[$index]->difference = null;
+                $products[$index]->percentage = null;
+                $product->precio = "Consultar";
+            }
+        }    
+
+        // Gets the total difference
+        $totalDifference = $totalPCC != null ? round($totalPCC - $totalPCB, 2, PHP_ROUND_HALF_UP) : null;
+        $totalPercentage = $totalPCB != 0 ? round(($totalDifference / $totalPCB) * 100, 2, PHP_ROUND_HALF_UP) : null;
+
+        // Defines an array
+        $assoc_array = array();
+        
+        if($products) {
+            // Saves data into the associative array and returns it
+            $assoc_array['products'] = $products;
+            $assoc_array['totalPCB'] = $totalPCB;
+            $assoc_array['totalPCC'] = $totalPCC;
+            $assoc_array['totalDifference'] = $totalDifference;
+            $assoc_array['totalPercentage'] = $totalPercentage;
+        }
+
+        return $assoc_array;
+    }
+
+    /**
+     * Display the specified resources.
+     *
+     * @param \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function references(Request $request){
+
+        if($request->references != null){
+            $productsTemp = array();
+            $productsRefs = $this->explodeString($request->references);
+
+            foreach ($productsRefs as $ref) {
+                $queryResult = DB::select("SELECT pcbox.codigo, pcbox.nombre, pcbox.precio, pcbox.enlace as enlace, pcbox.subcategoria, pccomponentes.referencia_fabricante,
+                pccomponentes.precio as precioPccomp, pccomponentes.enlace as enlacePccomp FROM pcbox,pccomponentes WHERE pcbox.codigo LIKE '".$this->trimAndFormat($ref)."'
+                AND pcbox.referencia_fabricante = pccomponentes.referencia_fabricante");
+
+                if($queryResult){
+                    array_push($productsTemp, $queryResult[0]);
                 }
                 
             }
 
-            $totalDifference = $totalPCC - $totalPCB;
-            if($totalPCB != 0){
-                $totalPercentage = round(($totalDifference / $totalPCB) * 100, 2);
-            }
-            else{
-                $totalPercentage = null;
-            }
+            $assoc_array = $this->totals($productsTemp);
         }
         else {
             return response()->json(['error' => 'The search input was empty. Please, type something in order to search products']);
         }
+        // Analizar bien esta parte
 
-        if(count($products) > 0) {
-            $results = array();
-            $results['products'] = $products;
-            $results['totalPCB'] = $totalPCB;
-            $results['totalPCC'] = $totalPCC;
-            $results['totalDifference'] = $totalDifference;
-            $results['totalPercentage'] = $totalPercentage;
-            return response()->json(['productsArray' => $results], 200);
+        // $products = isset($assoc_array['products']) ? collect($assoc_array['products']) : array();
+        // $totalPCB = isset($assoc_array['totalPCB']) ? $assoc_array['totalPCB'] : 0.0;
+        // $totalPCC = isset($assoc_array['totalPCC']) ? $assoc_array['totalPCC'] : 0.0;
+        // $totalDifference = isset($assoc_array['totalDifference']) ? $assoc_array['totalDifference'] : null;
+        // $totalPercentage = isset($assoc_array['totalPercentage']) ? $assoc_array['totalPercentage'] : null;
+
+        if($assoc_array) {
+            return response()->json(['productsArray' => $assoc_array], 200);
         }
         
         return response()->json(['error' => 'No products were found. Please, try again with different search parameters']);
+        
     }
 
     /**

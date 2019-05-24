@@ -689,48 +689,50 @@ class ProductController extends Controller
      */
     private function totals($products, $alternativeTotals = false){
 
-        $totalPCB = 0.0; $totalPCC = 0.0;
-
-        // Iterates over the products
-        foreach ($products as $index => $product) {
-            // Check if the current product has a price set and, if not, avoid the division by zero, and set the values as null
-            if($product->precio !=0){
-                // If price of current product has a value different than 0, set a pair key => value for both difference and percentage, and agrees prices to totals vars
-                if (!isset($product->precioPccomp)) {
-
-                    $product->difference = null;
-                    $product->percentage = null;
-                    $totalPCB += $product->precio;
-                }
-                else {
-                    $products[$index]->difference = $product->precioPccomp - $product->precio;
-                    $products[$index]->percentage = round(($product->difference / $product->precio) * 100, 2);
-                    $totalPCB += $product->precio;
-                    $totalPCC += $product->precioPccomp;
-                }
-            }
-            else{
-                // Set values as null if no price has been set for current product
-                $totalPCC = isset($product->precioPccomp) ? $totalPCC + $product->precioPccomp : null;
-                $products[$index]->difference = null;
-                $products[$index]->percentage = null;
-            }
-        }
-        
-        // Gets the total difference
-        $totalDifference = $totalPCC != null ? $totalPCC - $totalPCB : null;
-        $totalPercentage = $totalPCB != 0 ? round(($totalDifference / $totalPCB) * 100, 2) : null;
-
         // Defines an array
         $assoc_array = array();
 
         if($products) {
+            
+            $totalPCB = 0.0; $totalPCC = 0.0;
+
+            // Iterates over the products
+            foreach ($products as $index => $product) {
+                // Check if the current product has a price set and, if not, avoid the division by zero, and set the values as null
+                if($product->precio !=0){
+                    // If price of current product has a value different than 0, set a pair key => value for both difference and percentage, and agrees prices to totals vars
+                    if (!isset($product->precioPccomp)) {
+
+                        $product->difference = null;
+                        $product->percentage = null;
+                        $totalPCB += $product->precio;
+                    }
+                    else {
+                        $products[$index]->difference = $product->precioPccomp - $product->precio;
+                        $products[$index]->percentage = round(($product->difference / $product->precio) * 100, 2);
+                        $totalPCB += $product->precio;
+                        $totalPCC += $product->precioPccomp;
+                    }
+                }
+                else{
+                    // Set values as null if no price has been set for current product
+                    $totalPCC = isset($product->precioPccomp) ? $totalPCC + $product->precioPccomp : null;
+                    $products[$index]->difference = null;
+                    $products[$index]->percentage = null;
+                }
+            }
+            
+            // Gets the total difference
+            $totalDifference = $totalPCC != null ? $totalPCC - $totalPCB : null;
+            $totalPercentage = $totalPCB != 0 ? round(($totalDifference / $totalPCB) * 100, 2) : null;
+
             // Saves data into the associative array and returns it
             $assoc_array['products'] = $products;
             $assoc_array['totalPCB'] = $totalPCB;
             $assoc_array['totalPCC'] = $totalPCC;
             $assoc_array['totalDifference'] = $totalDifference;
             $assoc_array['totalPercentage'] = $totalPercentage;
+
         }
 
         return $assoc_array;

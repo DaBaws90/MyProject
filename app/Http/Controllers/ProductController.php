@@ -485,17 +485,6 @@ class ProductController extends Controller
     }
 
     /**
-     * Get the error messages for the defined validation rules.
-     *
-     * @return array
-     */
-    // public function messages() {
-    //     return [
-    //         'products.required' => 'You need at least one product to generate an alternative budget (Necesita al menos un producto para generar un presupuesto alternativo)',
-    //     ];
-    // }
-
-    /**
      * Process text from an uploaded PDF (using smalot/pdfparser)
      * 
      * @param \Illuminate\Http\Request  $request
@@ -693,7 +682,7 @@ class ProductController extends Controller
         $assoc_array = array();
 
         if($products) {
-            
+
             $totalPCB = 0.0; $totalPCC = 0.0;
 
             // Iterates over the products

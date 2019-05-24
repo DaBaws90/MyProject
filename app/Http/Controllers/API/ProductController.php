@@ -93,7 +93,7 @@ class ProductController extends Controller
      * @return Array with desired values
      */
     private function totals($products){
-        
+
         // Defines an array
         $assoc_array = array();
 
@@ -169,17 +169,11 @@ class ProductController extends Controller
             }
 
             $assoc_array = $this->totals($productsTemp);
+
         }
         else {
             return response()->json(['error' => 'The search input was empty. Please, type something in order to search products']);
         }
-        // Analizar bien esta parte
-
-        // $products = isset($assoc_array['products']) ? collect($assoc_array['products']) : array();
-        // $totalPCB = isset($assoc_array['totalPCB']) ? $assoc_array['totalPCB'] : 0.0;
-        // $totalPCC = isset($assoc_array['totalPCC']) ? $assoc_array['totalPCC'] : 0.0;
-        // $totalDifference = isset($assoc_array['totalDifference']) ? $assoc_array['totalDifference'] : null;
-        // $totalPercentage = isset($assoc_array['totalPercentage']) ? $assoc_array['totalPercentage'] : null;
 
         if($assoc_array) {
             return response()->json(['productsArray' => $assoc_array], 200);
@@ -188,6 +182,148 @@ class ProductController extends Controller
         return response()->json(['error' => 'No products were found. Please, try again with different search parameters']);
         
     }
+
+    /**
+     * Display the specified resources.
+     *
+     * @param \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    // public function categories(Request $request){
+        
+    //     $categoryQuery = "";
+
+    //     if($request->category != 0){
+    //         $category = Familium::find($request->category);
+    //         $categoryQuery = " pccomponentes.familia = '".$category->familia."' AND";
+    //     }
+
+    //     // Evaluating if keywords have been entered in search field
+    //     $keywordQuery = "";
+
+    //     if($request->keyword != null){
+    //         if($request->keyword1 != null){
+    //             $keywordQuery = " AND (";
+    //         }
+    //         else{
+    //             $keywordQuery = " AND ";
+    //         }
+            
+    //         $keywords = explode(' ', $request->keyword);
+
+    //         for ($i=0; $i < count($keywords); $i++) { 
+    //             # code...
+    //             if($i !== (count($keywords) - 1)){
+    //                 $keywordQuery = $keywordQuery." (pcbox.nombre LIKE '%".$keywords[$i]."%') AND ";
+    //             }
+    //             else{
+    //                 $keywordQuery = $keywordQuery." (pcbox.nombre LIKE '%".$keywords[$i]."%')";
+    //             }
+    //         }
+    //     }
+    //     // WHERE ( pcbox.referencia_fabricante = pccomponentes.referencia_fabricante AND pcbox.precio > pccomponentes.precio) AND 
+    //     // (( pcbox.nombre LIKE '%placa%' AND pcbox.nombre LIKE '%gigabyte%') OR ( pcbox.nombre LIKE '%asus%') AND pcbox.nombre LIKE '%grafica%' ORDER BY pccomponentes.precio
+
+    //     // Check if additional keyword search field has been used
+    //     if($request->keyword1 != null){
+    //         $keywordQuery = $keywordQuery." OR ";
+    //         $keywords1 = explode(' ', $request->keyword1);
+
+    //         for ($i=0; $i < count($keywords1); $i++) { 
+    //             # code...
+    //             if($i !== (count($keywords1) - 1)){
+    //                 $keywordQuery = $keywordQuery." (pcbox.nombre LIKE '%".$keywords1[$i]."%') AND ";
+    //             }
+    //             else{
+    //                 $keywordQuery = $keywordQuery." (pcbox.nombre LIKE '%".$keywords1[$i]."%')";
+    //             }
+    //         }
+    //         $keywordQuery = $keywordQuery.")";
+    //     }
+
+    //     // Evaluamos si hay filtro de menor o mayor
+    //     switch($request->comparison){
+    //         case "lesser":
+    //             $comparisonQuery = " AND pcbox.precio <= pccomponentes.precio";
+    //             break;
+
+    //         case "greater":
+    //             $comparisonQuery = " AND pcbox.precio > pccomponentes.precio";
+    //             break;
+
+    //         default:
+    //             $comparisonQuery = "";
+    //             break;
+
+    //     }
+
+    //     $tempList = DB::select(
+    //         "SELECT pcbox.codigo, pcbox.nombre, pcbox.precio, pcbox.enlace as enlace, pccomponentes.referencia_fabricante,
+    //         pccomponentes.precio as precioPccomp, pccomponentes.enlace as enlacePccomp FROM pcbox,pccomponentes WHERE ("
+    //         .$categoryQuery." pcbox.referencia_fabricante = pccomponentes.referencia_fabricante".$comparisonQuery.") "
+    //         .$keywordQuery." ORDER BY pccomponentes.precio"
+    //     );
+
+    //     if($request->percentage != null){
+    //         $products = array();
+
+    //         if($request->comparison != "all"){
+    //             foreach($tempList as $product){
+    //                 // Division by zero error needs to be controlled
+    //                 if($product->precio != 0){
+    //                     if (abs((($product->precioPccomp - $product->precio) / $product->precio) * 100) <= abs($request->percentage)){
+    //                         array_push($products, $product);
+    //                     };
+    //                 }
+    //             };
+    //         }
+    //         else{
+    //             $products = $tempList;
+    //         }
+    //     }
+    //     else{
+    //         $products = $tempList;
+    //     }
+
+    //     $totalPCB = 0.0; $totalPCC = 0.0;
+
+    //     foreach ($products as $index => $product) {
+    //         # code...
+    //         $product->nombre = strtoupper($product->nombre);
+    //         if($product->precio !=0){
+    //             $products[$index]->difference = round($product->precioPccomp - $product->precio, 2, PHP_ROUND_HALF_UP);
+    //             $products[$index]->percentage = round(($product->difference / $product->precio) * 100, 2, PHP_ROUND_HALF_UP);
+    //             $totalPCB += $product->precio;
+    //             $totalPCC += $product->precioPccomp;
+    //         }
+    //         else{
+    //             $products[$index]->precio = "Consultar";
+    //             $products[$index]->difference = null;
+    //             $products[$index]->percentage = null;
+    //         }
+            
+    //     }
+
+    //     $totalDifference = $totalPCC - $totalPCB;
+    //     if($totalPCB != 0){
+    //         $totalPercentage = round(($totalDifference / $totalPCB) * 100, 2);
+    //     }
+    //     else{
+    //         $totalPercentage = null;
+    //     }
+
+    //     if(count($products) > 0) {
+    //         $results = array();
+    //         $results['products'] = $products;
+    //         $results['totalPCB'] = $totalPCB;
+    //         $results['totalPCC'] = $totalPCC;
+    //         $results['totalDifference'] = $totalDifference;
+    //         $results['totalPercentage'] = $totalPercentage;
+    //         return response()->json(['productsArray' => $results], 200);
+    //     }
+        
+    //     return response()->json(['error' => 'No products were found. Please, try again with different search parameters']);
+    // }
 
     /**
      * Display the specified resources.
@@ -208,6 +344,7 @@ class ProductController extends Controller
         $keywordQuery = "";
 
         if($request->keyword != null){
+
             if($request->keyword1 != null){
                 $keywordQuery = " AND (";
             }
@@ -227,11 +364,10 @@ class ProductController extends Controller
                 }
             }
         }
-        // WHERE ( pcbox.referencia_fabricante = pccomponentes.referencia_fabricante AND pcbox.precio > pccomponentes.precio) AND 
-        // (( pcbox.nombre LIKE '%placa%' AND pcbox.nombre LIKE '%gigabyte%') OR ( pcbox.nombre LIKE '%asus%') AND pcbox.nombre LIKE '%grafica%' ORDER BY pccomponentes.precio
 
         // Check if additional keyword search field has been used
         if($request->keyword1 != null){
+
             $keywordQuery = $keywordQuery." OR ";
             $keywords1 = explode(' ', $request->keyword1);
 
@@ -246,7 +382,7 @@ class ProductController extends Controller
             }
             $keywordQuery = $keywordQuery.")";
         }
-
+        
         // Evaluamos si hay filtro de menor o mayor
         switch($request->comparison){
             case "lesser":
@@ -264,7 +400,7 @@ class ProductController extends Controller
         }
 
         $tempList = DB::select(
-            "SELECT pcbox.codigo, pcbox.nombre, pcbox.precio, pcbox.enlace as enlace, pccomponentes.referencia_fabricante,
+            "SELECT pcbox.codigo, pcbox.nombre, pcbox.precio, pcbox.enlace as enlace, pcbox.subcategoria, pccomponentes.referencia_fabricante,
             pccomponentes.precio as precioPccomp, pccomponentes.enlace as enlacePccomp FROM pcbox,pccomponentes WHERE ("
             .$categoryQuery." pcbox.referencia_fabricante = pccomponentes.referencia_fabricante".$comparisonQuery.") "
             .$keywordQuery." ORDER BY pccomponentes.precio"
@@ -291,41 +427,11 @@ class ProductController extends Controller
             $products = $tempList;
         }
 
-        $totalPCB = 0.0; $totalPCC = 0.0;
+        // Once all the refs have been processed, calls to totals function to get the total prices and differences between companies, saving data in an associative array
+        $assoc_array = $this->totals($products);
 
-        foreach ($products as $index => $product) {
-            # code...
-            $product->nombre = strtoupper($product->nombre);
-            if($product->precio !=0){
-                $products[$index]->difference = round($product->precioPccomp - $product->precio, 2, PHP_ROUND_HALF_UP);
-                $products[$index]->percentage = round(($product->difference / $product->precio) * 100, 2, PHP_ROUND_HALF_UP);
-                $totalPCB += $product->precio;
-                $totalPCC += $product->precioPccomp;
-            }
-            else{
-                $products[$index]->precio = "Consultar";
-                $products[$index]->difference = null;
-                $products[$index]->percentage = null;
-            }
-            
-        }
-
-        $totalDifference = $totalPCC - $totalPCB;
-        if($totalPCB != 0){
-            $totalPercentage = round(($totalDifference / $totalPCB) * 100, 2);
-        }
-        else{
-            $totalPercentage = null;
-        }
-
-        if(count($products) > 0) {
-            $results = array();
-            $results['products'] = $products;
-            $results['totalPCB'] = $totalPCB;
-            $results['totalPCC'] = $totalPCC;
-            $results['totalDifference'] = $totalDifference;
-            $results['totalPercentage'] = $totalPercentage;
-            return response()->json(['productsArray' => $results], 200);
+        if($assoc_array) {
+            return response()->json(['productsArray' => $assoc_array], 200);
         }
         
         return response()->json(['error' => 'No products were found. Please, try again with different search parameters']);

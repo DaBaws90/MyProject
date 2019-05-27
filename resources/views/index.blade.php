@@ -115,7 +115,7 @@
                                 <div class="form-group row">
                                     <label class="col-md-2 col-form-label" for="porcentaje">Porcentaje:</label>
                                     <div class="col-md-10">
-                                        <input type="number" class="wideInput" min="1" max="100" step="0.1" lang="es" id="porcentaje" name="percentage">
+                                        <input type="number" class="wideInput" min="0.1" max="100" step="0.1" lang="es" id="porcentaje" name="percentage">
                                     </div>
                                 </div>
                             </div>

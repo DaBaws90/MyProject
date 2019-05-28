@@ -3,38 +3,40 @@
 
 $(document).ready(function() {
     
-    var btn = $('#showEditForm');
+    // var btn = $('.showEditForm');
     var aliasText = $('.hideable');
     var aliasForm = $('.editAliasForm');
     var dialog = $('#dialog');
     var aliasInput = $('input[name="alias"]');
     var aliasSpan = $('.hideable span');
 
-    btn.on('click', () => {
-        // btn.hide();
-        // aliasForm.show();
-        // aliasText.hide();
-        toggleDOMElements();
-    });
-    
-    aliasForm.submit( (e) => {
+    $('.myTable').on('click', '.showEditForm', function() {
+        let index = $(this).index('.showEditForm');
+        // console.log("Button #" + index + " clicked!")
+        toggleDOMElements(index)
+    })
+
+    $(document).on('submit', '.editAliasForm', function(e) {
+
         e.preventDefault();
+        let index = $(this).index('.editAliasForm')
+        // console.log("Form #" + index)
 
         let data = {
-            id: $('input[name="id"]').val(),
-            alias: aliasInput.val(),
+            id: $(this).children('input[name="id"]').val(),
+            alias: $('input[name="alias"]').eq(index).val(),
         }
+        // console.log("ID del fichero: " + data.id, "Alias: " + data.alias)
 
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-
         $.ajax({
             method: 'PATCH',
             type: 'POST',
-            url: aliasForm.attr('action'),
+            url: $(this).attr('action'),
             data: data,
             success: function( data, textStatus, jqXHR ) {
 
@@ -57,7 +59,7 @@ $(document).ready(function() {
                     buttons: {
                         Ok: function() {
                             $( this ).dialog( "close" );
-                            toggleDOMElements(data);
+                            toggleDOMElements(index, data);
                         }
                     }
                 });
@@ -86,24 +88,21 @@ $(document).ready(function() {
                         }
                     }
                 });
-            },
-            // complete: function(jqXHR, textStatus) {
-
-            // }
+            }
         })
     })
 
-    function toggleDOMElements(data = null) {
-        aliasText.toggle();
-        aliasForm.toggle();
-        btn.toggle();
-        updateValues(data);
+    function toggleDOMElements(index, data = null) {
+        // console.log("Elemento #" + index, "Datos: " + data)
+        aliasText.eq(index).toggle();
+        aliasForm.eq(index).toggle();
+        updateValues(index, data);
     }
 
-    function updateValues(data = null) {
-        aliasSpan.html((data != null) ? data.success.file.alias : aliasSpan.val());
-        aliasInput.attr('placeholder', ((data != null) ? 'Last value: ' + data.success.file.alias : aliasInput.attr('placeholder')));
-        aliasInput.val('');
+    function updateValues(index, data = null) {
+        aliasSpan.eq(index).html((data != null) ? data.success.file.alias : aliasSpan.eq(index).val());
+        aliasInput.eq(index).attr('placeholder', ((data != null) ? 'Last value: ' + data.success.file.alias : aliasInput.eq(index).attr('placeholder')));
+        aliasInput.eq(index).val('');
     }
 
     function setDialog(jqXHR, errorThrown = null ) {

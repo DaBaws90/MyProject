@@ -78,7 +78,7 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <table class="table table-striped centerAlign mt-4">
+                    <table class="table table-striped centerAlign mt-4 myTable">
                         <thead class="thead-dark">
                             <tr>
                                 <th scope="col">#</th>
@@ -90,7 +90,7 @@
                                 <th scope="col">Borrar</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="test"
                             @forelse($user->uploads as $index => $file)
                             <tr class="mt-5">
                                 <td class="mt-5" scope="row">{{ $index + 1 }}</td>
@@ -109,10 +109,11 @@
                                             </div>
                                         </div>
                                     </form>
-                                    <p class="hideable">
-                                        <span>{{ $file->alias ? $file->alias : '(Sin alias)' }} </span>
-                                        <button id="showEditForm" class="btn btn-link btn-light btn-sm customBtn showEditForm"> <i class="fas fa-pencil-alt"></i></button> 
-                                    </p> 
+                                        <p class="hideable">
+                                            <span>{{ $file->alias ? $file->alias : '(Sin alias)' }} </span>
+                                            <button id="showEditForm" class="btn btn-link btn-light btn-sm customBtn showEditForm"> <i class="fas fa-pencil-alt"></i></button> 
+                                        </p> 
+                                    <!-- </form> -->
                                 </td>
                                 <td>{{ $file->created_at }}</td>
                                 <td><a class="btn btn-link btn-light btn-sm customBtn" href="{{ route('download', ['id' => $file->id]) }}"><i class="fas fa-download"></i></a></td>
@@ -169,7 +170,6 @@
         });
     </script>
 @endif
-
 
 <script src="{{ asset('js/aliasUpdateAjaxSubmit.js') }}"></script>
 

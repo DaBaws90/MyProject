@@ -111,7 +111,7 @@
                                     </form>
                                     <p class="hideable">
                                         <span>{{ $file->alias ? $file->alias : '(Sin alias)' }} </span>
-                                        <button id="showEditForm" class="btn btn-link btn-light btn-sm customBtn"> <i class="fas fa-pencil-alt"></i></button> 
+                                        <button id="showEditForm" class="btn btn-link btn-light btn-sm customBtn showEditForm"> <i class="fas fa-pencil-alt"></i></button> 
                                     </p> 
                                 </td>
                                 <td>{{ $file->created_at }}</td>

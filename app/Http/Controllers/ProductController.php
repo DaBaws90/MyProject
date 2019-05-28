@@ -574,7 +574,7 @@ class ProductController extends Controller
         $totalPercentage = isset($assoc_array['totalPercentage']) ? $assoc_array['totalPercentage'] : null;
 
         // Insert the data into the view and returns it
-        return view('products.results', compact('products', 'totalPCB', 'totalPCC', 'totalDifference', 'totalPercentage'))->with('title', 'referencias del PDF');
+        return view('products.results', compact('products', 'totalPCB', 'totalPCC', 'totalDifference', 'totalPercentage'))->with(['title' => 'referencias del PDF', 'generate' => true]);
     }
 
 

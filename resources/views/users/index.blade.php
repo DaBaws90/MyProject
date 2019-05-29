@@ -21,21 +21,23 @@
                         <!-- <div class="float-left mb-1"> -->
                             <a class="btn btn-outline-primary btn-block mb-3" href="{{ route('register') }}"><i class="fa fa-plus"></i> Añadir usuario</a>
                         <!-- </div> -->
-                        
-                        <table id="users-table" class="table table-striped table-hover table-bordered" style="width:100%">
-                            <thead>
-                                <tr scope="row">
-                                    <th scope="col"></th>
-                                    <th scope="col">ID</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Email</th>
-                                    <th scope="col">Registrado el</th>
-                                    <th scope="col">Activo</th>
-                                    <th scope="col">Verificar</th>
-                                    <th scope="col">Acciones</th>
-                                </tr>
-                            </thead>
-                        </table>
+                        <form id="disableForm" action="{{ route('disable') }}" method="post">
+                            @csrf
+                            <table id="users-table" class="table table-striped table-hover table-bordered" style="width:100%">
+                                <thead>
+                                    <tr scope="row">
+                                        <th scope="col"></th>
+                                        <th scope="col">ID</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Email</th>
+                                        <th scope="col">Registrado el</th>
+                                        <th scope="col">Activo</th>
+                                        <th scope="col">Verificar</th>
+                                        <th scope="col">Acciones</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </form>
         @endsection
 
     @section('content2')
@@ -89,7 +91,7 @@ var table = $('#users-table').DataTable({
                 let id = $.parseJSON(JSON.stringify(row.id));
                 /* 
                     Mala praxis el inlcuir el event handler inline, pero al añadirlo desde JS, solo podía añadirlo a los elementos que estuviesen cargados en la página actuald e Datatables,
-                    por lo que tuve que hacerlo de este modo aunque no sea lo correcto.
+                    al menos con lo que sé de JS en este puntoi, por lo que he tenido que hacerlo de este modo aunque no sea lo correcto.
                 */
                 let startingTag = `<a onclick='return confirm("Va a verificar el email del siguiente usuario. ¿Desea continuar?")' 
                     href="{{ route('verify', ['id' => 'idVal']) }}" class="btn btn-link verify">`.replace('idVal', id);

@@ -329,7 +329,6 @@ class UserController extends Controller
                 ->withErrors($validator);
         }
 
-        
         foreach($request->ids as $id) {
             $user = User::find($id);
             if($user) {

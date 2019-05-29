@@ -116,7 +116,7 @@ class UploadController extends Controller
 
         if($success) {
             // dd("Éxito");
-            return redirect()->route('profile')->with('message', ['success', 'Se eliminó el fichero con éxito']);
+            return redirect()->route('profile')->with('success', ['success', 'Se eliminó el fichero con éxito']);
         }
         // dd("FAIL");
         return redirect()->route('profile')->with('message', ['danger', 'Se produjo un error al eliminar el fichero']);

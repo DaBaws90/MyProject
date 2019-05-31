@@ -32,7 +32,7 @@
                                     <th scope="col">Nombre</a></th>
                                     <th scope="col">Referencia</a></th>
                                     <th scope="col">Precio PCBox</a></th>
-                                    <th scope="col">Precio PCComponentes</a></th>
+                                    <th scope="col">Precio Web</a></th>
                                     <th scope="col">Diferencia</a></th>
                                     <th scope="col">Porcentaje</a></th>
                                 </tr>
@@ -42,7 +42,7 @@
                                     <tr scope="row">
                                         <td>{{ $product->codigo }}</td>
                                         <td><a target="_blank" class="customLinks" href="{{ $product->enlace }}">{{ strtoupper($product->nombre) }}</a></td>
-                                        <td><a target="_blank" class="customLinks" href="{{ $product->enlacePccomp }}">{{ $product->referencia_fabricante}}</a></td>
+                                        <td>{{ $product->referencia_fabricante}}</td>
                                         <td>{{ $product->precio ? $product->precio : _("Consultar") }}</td>
                                         <td>{{ $product->precioPccomp ? $product->precioPccomp : __('---') }}</td>
                                         <td>{{ $product->difference ? round($product->difference, 2, PHP_ROUND_HALF_UP) : _(" --- ")}}</td>

@@ -29,9 +29,9 @@
                                     <button type="submit" class="mt-4 mb-3 btn btn-outline-primary btn-block"><i class="fas fa-search"></i> Buscar</button>
                                 </div>
                             </form>
-                            @if ($errors->has('file'))
+                            @if ($errors->has('file') || $errors->has('limit'))
                                 <div id="modalError" class="text-center alert alert-danger alert-dismissible fade show" role="alert">
-                                    <strong>{{ $errors->first('file') }}</strong>
+                                    <strong>{{ $errors->first('file') ? $errors->first('file') : $errors->first('limit') }}</strong>
                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
@@ -88,14 +88,14 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <input class="customRadio" type="radio" id="comparativa-menor" name="comparison" value="lesser">
-                                <label for="comparativa-menor">PC Box <= PcComponentes</label>
+                                <label for="comparativa-menor">PC Box <= Web</label>
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-md-12">
                                 <input class="customRadio" type="radio" id="comparativa-mayor" name="comparison" value="greater">
-                                <label for="comparativa-mayor">PC Box > PcComponentes</label>
+                                <label for="comparativa-mayor">PC Box > Web</label>
                             </div>
                         </div>
 

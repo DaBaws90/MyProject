@@ -152,6 +152,12 @@ return [
         'keyword' => [
             'string' => 'Keyword needs to be a valid string (El formato de la palabra clave debe ser una cadena de texto)',
             'max' => 'Keyword must contains 150 characters as maximum (La(s) palabra(s) clave debe(n) contener un máximo de 150 carácteres)',
+        ],
+        'file' => [
+            'mimes' => 'Only PDF files format is allowed'
+        ],
+        'limit' => [
+            'limit' => 'Limit exceeded'
         ]
     ],
 

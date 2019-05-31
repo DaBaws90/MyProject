@@ -492,6 +492,10 @@ class ProductController extends Controller
      */
     public function pdfUpload(Request $request, $newFile = false){
 
+        // if(count(Auth::user()->uploads) >= 1) {
+        //     return redirect()->back()->with('errors', ['file' => 'You cannot upload more than 10 budgets']);
+        // }
+
         if($newFile) {
             // Calls AUX function to manage the file upload
             $this->uploadFile($request, 'file', 'pdf');
@@ -617,10 +621,22 @@ class ProductController extends Controller
      */
     public function uploadFile(Request $request, $fileType, $extensions) {
 
-        // Validates that uploaded file is actually a PDF file using an AUX function
-        $request->validate([
+        $count = count(Auth::user()->uploads);
+
+        // Validator::extend('limit', function($attribute, $value, $parameters)
+        // {
+        //     return count(Auth::user()->uploads) <= 1;
+        // });
+
+        Validator::make($request->all(),[
             $fileType => 'required|'.$fileType.'|mimes:'.$this->replaceSubstring('dummy', $extensions),
-        ]);
+            'limit' => 'limit',
+        ])->validate();
+
+        // Validates that uploaded file is actually a PDF file using an AUX function
+        // $request->validate([
+        //     $fileType => 'required|'.$fileType.'|mimes:'.$this->replaceSubstring('dummy', $extensions),
+        // ]);
 
         // Generates the valid relative path for default storage driver (LOCAL I GUESS) and concats the specified string path 
         $uploadPath = Auth::user()->id .'/'. $fileType;

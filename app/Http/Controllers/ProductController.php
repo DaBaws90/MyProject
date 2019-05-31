@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\Eloquent\Collection;
 use App\Models\Pcbox;
 
+use App\Rules\pdfLimitReached;
+
 class ProductController extends Controller
 {
     /**
@@ -621,22 +623,13 @@ class ProductController extends Controller
      */
     public function uploadFile(Request $request, $fileType, $extensions) {
 
-        $count = count(Auth::user()->uploads);
-
-        // Validator::extend('limit', function($attribute, $value, $parameters)
-        // {
-        //     return count(Auth::user()->uploads) <= 1;
-        // });
+        // $count = count(Auth::user()->uploads);
 
         Validator::make($request->all(),[
-            $fileType => 'required|'.$fileType.'|mimes:'.$this->replaceSubstring('dummy', $extensions),
-            'limit' => 'limit',
+            $fileType => [
+                'required', $fileType, 'mimes:'.$this->replaceSubstring('dummy', $extensions), new pdfLimitReached(),
+            ]
         ])->validate();
-
-        // Validates that uploaded file is actually a PDF file using an AUX function
-        // $request->validate([
-        //     $fileType => 'required|'.$fileType.'|mimes:'.$this->replaceSubstring('dummy', $extensions),
-        // ]);
 
         // Generates the valid relative path for default storage driver (LOCAL I GUESS) and concats the specified string path 
         $uploadPath = Auth::user()->id .'/'. $fileType;

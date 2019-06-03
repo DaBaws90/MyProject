@@ -428,6 +428,7 @@ class ProductController extends Controller
                 'oldProducts' => collect($oldProducts),
                 'alternatives' => collect($alternatives),
                 'totals' => array($total, $totalPCC),
+                'nextRoute' => route('choices')
             ]], 200);
         }
             

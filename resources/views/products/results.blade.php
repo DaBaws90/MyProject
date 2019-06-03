@@ -275,12 +275,13 @@ $(document).ready(() => {
             }
         });
         $.ajax({
-            url: "/products/choices",
+            // url: "/MyProject/public/products/choices",
+            url: data.nextRoute,
             type: 'POST',
             data: { 
                 'oldProducts': JSON.stringify(data.oldProducts),
                 'alternatives': JSON.stringify(data.alternatives),
-                'totals': data.totals
+                'totals': data.totals,
             },
             success: function(response) {
                 console.log("onSuccess JS method - success response")

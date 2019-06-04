@@ -22,13 +22,13 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <input class="customRadioAlign float-left" type="radio" name="comparison" id="comparativa-menor" value="lesser">
-                                            <label class="float-left" for="comparativa-menor"> PC Box <= PcComponentes</label>
+                                            <label class="float-left" for="comparativa-menor"> PC Box <= Web</label>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-12">
                                             <input class="customRadioAlign float-left" type="radio" name="comparison" id="comparativa-mayor" value="greater">
-                                            <label class="float-left" for="comparativa-mayor"> PC Box > PcComponentes</label>
+                                            <label class="float-left" for="comparativa-mayor"> PC Box > Web</label>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -57,7 +57,7 @@
                         </div>
                     </div>
                     <hr>
-                    <div class="row mt-3">
+                    <!-- <div class="row mt-3">
                         <div class="col-md-10 offset-md-1 text-center">
                             <p>Mostrar articulos que contengan el/los término(s):</p>
                             <div class="row">
@@ -66,7 +66,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
                 <!-- Buttons -->
                 <div class="modal-footer">

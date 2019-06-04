@@ -101,11 +101,14 @@
                                         <input name="_method" type="hidden" value="PATCH"/>
                                         <input name="id" type="hidden" value="{{ $file->id }}"/>
                                         <div class="form-group row">
-                                            <div class="col-md-11">
+                                            <div class="col-md-10">
                                                 <input class="form-control" type="text" name="alias" placeholder="Last value: {{ $file->alias ? $file->alias : __('Sin alias') }}">
                                             </div>
                                             <div class="col-md-1">
                                                 <button class="btn btn-link btn-light customBtn onConfirm save" type="submit"> <i class="far fa-save"></i></button>  
+                                            </div>
+                                            <div class="col-md-1">
+                                                <a href="#" class="btn btn-link btn-light customBtn cancelEditAlias"> <i class="fas fa-times"></i></i></a>  
                                             </div>
                                         </div>
                                     </form>

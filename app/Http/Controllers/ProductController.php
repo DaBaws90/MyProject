@@ -317,11 +317,17 @@ class ProductController extends Controller
         // Once all the refs have been processed, calls to totals function to get the total prices and differences between companies, saving data in an associative array
         $assoc_array = $this->totals($products);
 
-        $products = $assoc_array['products'];
-        $totalPCB = $assoc_array['totalPCB'];
-        $totalPCC = $assoc_array['totalPCC'];
-        $totalDifference = $assoc_array['totalDifference'];
-        $totalPercentage = $assoc_array['totalPercentage'];
+        // $products = $assoc_array['products'];
+        // $totalPCB = $assoc_array['totalPCB'];
+        // $totalPCC = $assoc_array['totalPCC'];
+        // $totalDifference = $assoc_array['totalDifference'];
+        // $totalPercentage = $assoc_array['totalPercentage'];
+
+        $products = isset($assoc_array['products']) ? collect($assoc_array['products']) : array();
+        $totalPCB = isset($assoc_array['totalPCB']) ? $assoc_array['totalPCB'] : 0.0;
+        $totalPCC = isset($assoc_array['totalPCC']) ? $assoc_array['totalPCC'] : 0.0;
+        $totalDifference = isset($assoc_array['totalDifference']) ? $assoc_array['totalDifference'] : null;
+        $totalPercentage = isset($assoc_array['totalPercentage']) ? $assoc_array['totalPercentage'] : null;
         
         // Insert the data into the view and returns it
         return view('products.results', compact('products', 'totalPCB', 'totalPCC', 'totalDifference', 'totalPercentage'))->with(['title' => 'familias', 'generate' => true]);

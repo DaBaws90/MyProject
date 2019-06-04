@@ -9,12 +9,37 @@ $(document).ready(function() {
     var dialog = $('#dialog');
     var aliasInput = $('input[name="alias"]');
     var aliasSpan = $('.hideable span');
+    var cancelAlias = $('.cancelEditAlias')
 
     $('.myTable').on('click', '.showEditForm', function() {
         let index = $(this).index('.showEditForm');
         // console.log("Button #" + index + " clicked!")
         toggleDOMElements(index)
     })
+
+    $(document).on('blur', 'input[name="alias"]', function() {
+        let index = $(this).index('input[name="alias"]')
+        cancelEditAlias(index)
+    })
+
+    $('.myTable').on('click', '.cancelEditAlias', function(e) {
+        e.preventDefault();
+        let index = $(this).index('.cancelEditAlias')
+        // console.log(`Boton #${index} pulsado`)
+        cancelEditAlias(index)
+    })
+
+    function cancelEditAlias(index) {
+
+        let data = {
+            success: {
+                file: {
+                    alias: aliasInput.eq(index).attr('placeholder').split(':')[1]
+                }
+            }
+        }
+        toggleDOMElements(index, data)
+    }
 
     $(document).on('submit', '.editAliasForm', function(e) {
 
@@ -96,6 +121,10 @@ $(document).ready(function() {
         // console.log("Elemento #" + index, "Datos: " + data)
         aliasText.eq(index).toggle();
         aliasForm.eq(index).toggle();
+        // cancelAlias.eq(index).toggle();
+
+
+        // $('input[name="alias"]').eq(index).attr('autofocus', true)
         updateValues(index, data);
     }
 

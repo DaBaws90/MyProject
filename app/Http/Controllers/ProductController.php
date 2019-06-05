@@ -705,7 +705,7 @@ class ProductController extends Controller
             foreach ($products as $index => $product) {
                 // Check if the current product has a price set and, if not, avoid the division by zero, and set the values as null
                 if($product->precio !=0){
-                    // If price of current product has a value different than 0, set a pair key => value for both difference and percentage, and agrees prices to totals vars
+                    // If current product's price has a value different than 0, set a pair key => value for both difference and percentage, and agrees prices to totals vars
                     if (!isset($product->precioPccomp)) {
 
                         $product->difference = null;
@@ -721,7 +721,7 @@ class ProductController extends Controller
                 }
                 else{
                     // Set values as null if no price has been set for current product
-                    $totalPCC = isset($product->precioPccomp) ? $totalPCC + $product->precioPccomp : null;
+                    // $totalPCC = isset($product->precioPccomp) ? $totalPCC + $product->precioPccomp : null;
                     $products[$index]->difference = null;
                     $products[$index]->percentage = null;
                 }

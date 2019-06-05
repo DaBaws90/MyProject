@@ -145,10 +145,9 @@
                                 <a href="{{ route('register') }}">Registrar usuario</a>
                                 <a href="{{ route('users.index') }}">Gestionar usuarios</a>
                             @endif
-                            <a href="{{ url('/home') }}">Ir al comparador</a>
+                            <a href="{{ route('home') }}">Ir al comparador</a>
+                            <a href="{{ route('profile') }}">Ir al historial</a>
                         @endauth
-                        <a href="https://forge.laravel.com">Forge</a>
-                        <a href="https://github.com/laravel/laravel">GitHub</a>
                     </div>
                 </div>
             </div>

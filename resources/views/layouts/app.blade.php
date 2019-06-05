@@ -77,7 +77,33 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('home') }}">{{ __('Comparador') }}</a>
                         </li>
-                    </ul>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('profile') }}">{{ __('Historial de presupuestos') }}</a>
+                        </li>
+
+                        <!-- Right Side Of Navbar -->
+                        <ul class="navbar-nav ml-auto">
+                        @auth
+                            @if(Auth::user()->role == 'admin')
+                            <li class="nav-item dropdown">
+                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                    {{ __('Gestión de usuarios') }} <span class="caret"></span>
+                                </a>
+
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="{{ route('users.index') }}">{{ __('Consultar usuarios') }}</a>
+
+                                    @if(Route::current()->getName() != 'register')
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="{{ route('register') }}">{{ __('Registrar usuario') }}</a>
+                                    @endif
+                                </div>
+                            </li>
+                            @endif
+                        @endauth
+                        </ul>
+                    </ul> <!-- End of left side of navbar -->
 
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
@@ -98,23 +124,21 @@
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <!-- Borrar tras pruebas -->
-                                    <a class="dropdown-item" href="{{ route('profile') }}">{{ __('Perfil de usuario') }}</a>
-                                        <div class="dropdown-divider"></div>
+
                                     @if(Auth::user()->role != 'admin')
-                                    <a class="dropdown-item" href="{{ route('profile') }}">{{ __('Perfil de usuario') }}</a>
-                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="{{ route('profile') }}">{{ __('Perfil de usuario') }}</a>
+                                            <div class="dropdown-divider"></div>
                                     @else
                                         @if(Route::current()->getName() != 'register')
                                             <a class="dropdown-item" href="{{ route('register') }}">{{ __('Registrar usuario') }}</a>
-                                            <div class="dropdown-divider"></div>
+                                                <div class="dropdown-divider"></div>
                                         @endif
-                                    <a class="dropdown-item" href="{{ route('users.index') }}">{{ __('Gestionar usuarios') }}</a>
-                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="{{ route('users.index') }}">{{ __('Gestionar usuarios') }}</a>
+                                            <div class="dropdown-divider"></div>
                                     @endif
                                     <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
+                                    onclick="event.preventDefault();
+                                                    document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
                                     </a>
 

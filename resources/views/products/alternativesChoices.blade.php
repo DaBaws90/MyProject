@@ -30,7 +30,7 @@
                                         <th scope="col">Código</th>
                                         <th scope="col">Nombre</th>
                                         <th scope="col">Precio PCBox</th>
-                                        <th scope="col">Precio PCComp</th>
+                                        <th scope="col">Precio Web</th>
                                         <th scope="col">Alternativas</th>
                                     </tr>
                                 </thead>
@@ -73,8 +73,8 @@
                                     <tr scope="row">
                                         <td></td>
                                         <td class="text-center">{{ _("Totales") }}</td>
-                                        <td>{{ $total }}</td>
-                                        <td>{{ $totalPCC }}</td>
+                                        <td>{{ $total != 0 ? $total : __('Sin importe') }}</td>
+                                        <td>{{ $totalPCC != 0 ? $totalPCC : __('Sin importe') }}</td>
                                         <td></td>
                                     </tr>
                                 </tbody>

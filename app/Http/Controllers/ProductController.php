@@ -420,8 +420,10 @@ class ProductController extends Controller
                     ".$percentageQuery." ) ".$keywordQuery." ORDER BY precio"
             );
 
-            $total += $product->precio;
-            $totalPCC += $product->precioPccomp;
+            if($product->precio != 0) {
+                $total += $product->precio;
+                $totalPCC += $product->precioPccomp;
+            }
 
             array_push($oldProducts, $product);
             array_push($alternatives, $queryResult ? $queryResult : null);

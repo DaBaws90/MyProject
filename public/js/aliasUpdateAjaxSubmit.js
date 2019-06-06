@@ -17,10 +17,10 @@ $(document).ready(function() {
         toggleDOMElements(index)
     })
 
-    $(document).on('blur', 'input[name="alias"]', function() {
-        let index = $(this).index('input[name="alias"]')
-        cancelEditAlias(index)
-    })
+    // $(document).on('blur', 'input[name="alias"]', function() {
+    //     let index = $(this).index('input[name="alias"]')
+    //     cancelEditAlias(index)
+    // })
 
     $('.myTable').on('click', '.cancelEditAlias', function(e) {
         e.preventDefault();

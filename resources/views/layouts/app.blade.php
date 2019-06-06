@@ -47,11 +47,6 @@
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
 
     <!-- Custom App Scripts -->
-    <!-- 
-        Retrieve all submit buttons. Then, for every one of them, binds a function with an 'onclick' event, displaying a message based on which action performs on submit, 
-        e.g. DELETE, SAVE, ETC. and returns a confirm prompt with the proper message, e.g. The record will be modified. Are you sure? 
-    -->
-    <script src="{{ asset('js/onConfirmBtns.js') }}"></script>
 
     @stack('headStyles')
 
@@ -175,7 +170,13 @@
          <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script> 
 -->
 
-    <!-- Custom App scripts -->
+<!-- Custom App scripts -->
+
+<!-- 
+    Retrieve all submit buttons. Then, for every one of them, binds a function with an 'onclick' event, displaying a message based on which action performs on submit, 
+    e.g. DELETE, SAVE, ETC. and returns a confirm prompt with the proper message, e.g. The record will be modified. Are you sure? 
+-->
+<script defer src="{{ asset('js/onConfirmBtns.js') }}"></script>
 
 <!-- 
     Every back button/link references the REAL previous URL, not the last one from it received the request. 
@@ -191,9 +192,7 @@
     })
 </script>
 
-<script>
-    
-</script>
-    @stack('scripts')
+@stack('scripts')
+
 </body>
 </html>

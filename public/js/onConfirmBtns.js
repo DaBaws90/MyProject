@@ -1,50 +1,42 @@
 "use strict";
 
 $(document).ready(() => {
-setTimeout(() => {
+    let sentence = ""
 
-    const submitBtns = document.querySelectorAll('.onConfirm');
-    let sentence = "";
+    $(document).on('click', '.onConfirm', function(e) {
+        // e.preventDefault()
+        // console.log(this)
+        // console.log(`Btn #${$(this).index('.onConfirm')} pressed`)
+        // console.log($('.onConfirm'))
 
-    // Can't find the way to avoid TypeScript error on console for undefined/null btn 
-    // if(submitBtns.length > 0 && submitBtns !== undefined) { // <-- NOT WORKING
-        submitBtns.forEach(btn => {
-            btn.onclick = () => {
-                switch(true) {
+        switch(true) {
 
-                    case hasClass(btn, "save"):
-                        sentence = "Los cambios se guardarán. ¿Estás seguro?";
-                        return confirm(sentence);
-                        break;
-                
-                    case hasClass(btn, "delete"):
-                        sentence = "¿Está seguro de que desea eliminar el registro?";
-                        return confirm(sentence);
-                        break;
-
-                    case hasClass(btn, "disable"):
-                        sentence = "Los siguientes usuarios se habilitarán / deshabilitarán. ¿Desea continuar?";
-                        return confirm(sentence);
-                        break;
-
-                    case hasClass(btn, "verify"):
-                        sentence = "Va a verificar el email del siguiente usuario. ¿Desea continuar?";
-                        return confirm(sentence);
-                        break;
-                
-                    default:
-                        break;
-                }
-            }
+            case hasClass(this, "save"):
+                sentence = "Los cambios se guardarán. ¿Estás seguro?";
+                return confirm(sentence);
+                break;
         
-        });
-    // }
-}, 50);
+            case hasClass(this, "delete"):
+                sentence = "¿Está seguro de que desea eliminar el registro?";
+                return confirm(sentence);
+                break;
 
+            case hasClass(this, "disable"):
+                sentence = "Los siguientes usuarios se habilitarán / deshabilitarán. ¿Desea continuar?";
+                return confirm(sentence);
+                break;
 
-    function hasClass(object, text) {
-        return object.classList.toString().includes(text);
-    }
-
+            case hasClass(this, "verify"):
+                sentence = "Va a verificar el email del siguiente usuario. ¿Desea continuar?";
+                return confirm(sentence);
+                break;
+        
+            default:
+                break;
+        }
+    })
 })
 
+function hasClass(object, text) {
+    return object.classList.toString().includes(text);
+}

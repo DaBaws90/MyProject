@@ -107,12 +107,14 @@ var table = $('#users-table').DataTable({
     // infoCallback: function( settings, start, end, max, total, pre ) {
     //     if (total == 0) return "No matches found";
     //     return 'Showing '+total+' to '+end+' of '+total+' entries (filtered from '+max+' total entries)';
+    // },
+    // drawCallback: function( settings ) {
+        // alert( 'DataTables has redrawn the table' );
     // }
 });
 
 // $('.verify').on('click', function (e) { 
 //     // e.preventDefault();
-//     alert("JEJE");
 //     // if(confirm("¿Estás seguro de eliminar el registro?")) {
 //         $.ajaxSetup({
 //             headers: {

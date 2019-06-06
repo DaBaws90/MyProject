@@ -9,7 +9,7 @@ $(document).ready(function() {
     var dialog = $('#dialog');
     var aliasInput = $('input[name="alias"]');
     var aliasSpan = $('.hideable span');
-    var cancelAlias = $('.cancelEditAlias')
+    // var cancelAlias = $('.cancelEditAlias')
 
     $('.myTable').on('click', '.showEditForm', function() {
         let index = $(this).index('.showEditForm');

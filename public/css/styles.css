@@ -228,6 +228,10 @@ img {
     width: 50px;
 }
 
+.logoNavbar{
+    width: 50px;
+    height: 30px;
+}
 /* .navbar{
     background-image: url('../imgs/pcbox-logo.jpg')
 } */

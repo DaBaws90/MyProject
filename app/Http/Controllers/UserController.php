@@ -271,7 +271,7 @@ class UserController extends Controller
         ]);
 
         if($user){
-            return redirect("/")->with('success', ['success', __('Usuario '.$user->name.' creado correctamente')]);
+            return redirect()->route("users.index")->with('success', ['success', __('Usuario '.$user->name.' creado correctamente')]);
         }
         else{
             return redirect()->route('register')->with('message', ['danger', "Se produjo un error al registrar el nuevo usuario"]);

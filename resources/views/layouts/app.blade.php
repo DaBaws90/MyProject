@@ -59,7 +59,8 @@
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     <!-- {{ __('Home') }} -->
-                     <i class="fas fa-home"></i>
+                    <!-- <i class="fas fa-home"></i> -->
+                    <img class="logoNavbar" src="{{ asset('imgs/logo-mini-yellow.png') }}" alt="Logo-icon">
                     {{ config('app.name', 'PC Box') }}
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
@@ -191,6 +192,17 @@
         });
     })
 </script>
+
+@if(session('message') || session('success') || session('errors'))
+    @include('partials.modal')
+
+    <script>
+        $(document).ready(() => {
+            var btn = $('#openModal').click();
+            btn.hide();
+        })
+    </script>
+@endif
 
 @stack('scripts')
 

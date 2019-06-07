@@ -296,7 +296,8 @@ class ProductController extends Controller
         if($request->percentage != null){
             $products = array();
 
-            if($request->comparison != "all"){
+            // NO NEED TO CHECK COMPARISON'S VALUE SINCE WE'RE WORKING WITH ABSOLUTE VALUES
+            // if($request->comparison != "all"){
                 foreach($tempList as $product){
                     // Division by zero error needs to be controlled
                     if($product->precio != 0){
@@ -305,10 +306,18 @@ class ProductController extends Controller
                         };
                     }
                 };
-            }
-            else{
-                $products = $tempList;
-            }
+            // }
+            // else{
+            //     // $products = $tempList;
+            //     foreach($tempList as $product){
+            //         // Division by zero error needs to be controlled
+            //         if($product->precio != 0){
+            //             if (abs((($product->precioPccomp - $product->precio) / $product->precio) * 100) <= abs($request->percentage)){
+            //                 array_push($products, $product);
+            //             };
+            //         }
+            //     };
+            // }
         }
         else{
             $products = $tempList;

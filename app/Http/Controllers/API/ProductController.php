@@ -122,7 +122,7 @@ class ProductController extends Controller
                 }
                 else{
                     // Set values as null if no price has been set for current product
-                    $totalPCC = isset($product->precioPccomp) ? $totalPCC + $product->precioPccomp : null;
+                    // $totalPCC = isset($product->precioPccomp) ? $totalPCC + $product->precioPccomp : null;
                     $products[$index]->difference = null;
                     $products[$index]->percentage = null;
                     $product->precio = "Consultar";

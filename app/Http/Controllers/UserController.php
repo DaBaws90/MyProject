@@ -83,7 +83,7 @@ class UserController extends Controller
 
         $route = route('users.update', $user->id);
 
-        $patchInput = '<input name="_method" type="hidden" value="PATCH"/>';
+        $patchInput = '<input name="_method" type="hidden" value="PATCH">';
 
         return view('users.editProfile', compact('user'))->with(
             array('title' => 'PC Box - Editar usuario', 'header' => 'Editar usuario', 'cardHeader' =>'Editar información del usuario', 'route' => $route, 'patchInput' => $patchInput)
@@ -185,7 +185,7 @@ class UserController extends Controller
         $route = route('editProfile');
 
         return view('users.editProfile', compact('user'))->with(
-            array('title' => 'PC Box - Editar perfil', 'header' => 'Editar perfil', 'cardHeader' => 'Edite su información personal', 'route' => $route)   
+            array('title' => 'PC Box - Editar perfil', 'header' => 'Editar perfil', 'cardHeader' => 'Edite su información personal', 'route' => $route, 'patchInput' => null)
         );
     }
 
@@ -211,8 +211,6 @@ class UserController extends Controller
 
         $user = User::find($request->id);
         $success = $user->update($request->all());
-
-        // $success = false;
 
         if($success) {
             return redirect()->route('profile')->with('success', ['success', 'Datos personales actualizados con éxito.']);

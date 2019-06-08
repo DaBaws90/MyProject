@@ -38,7 +38,6 @@
                                     @forelse($oldProducts as $index => $product)
                                         
                                         <tr scope="row">
-                                            <!-- <td>{{ $index + 1}}</td> -->
                                             <td>{{ $product->codigo }}</td>
                                             <td><a target="_blank" href="{{ $product->enlace }}">{{ strtoupper($product->nombre) }}</a></td>
                                             <td>{{ $product->precio != 0 ? $product->precio : __("Consultar") }}</td>
@@ -97,8 +96,13 @@
                         </div>
                     </div>
                     <div class="row noMargin">
+                        <div class="col-md-6 offset-md-3 text-center mb-2">
+                            <button class="btn btn-outline-primary btn-block refreshPage">Atrás</button>
+                        </div>
+                    </div>
+                    <div class="row noMargin">
                         <div class="col-md-6 offset-md-3 text-center">
-                            <a class="btn btn-outline-primary btn-block" href="{{ route('home') }}">Atrás</a>
+                            <a class="btn btn-outline-primary btn-block" href="{{ route('home') }}">Volver al inicio</a>
                         </div>
                     </div>
                 </div>
@@ -110,3 +114,15 @@
     <div id="dialog"></div>
 </div>
 
+<script>
+$(document).ready(() => {
+    $(document).on('click', '.refreshPage', function(e) {
+        console.log("CLICKED")
+        e.preventDefault()
+        window.location.reload()
+    })
+})
+</script>
+
+<!-- Custom Scripts to handle some events on scrolling -->
+<script src="{{ asset('js/goTopBottomScrollingEvents.js') }}"></script>

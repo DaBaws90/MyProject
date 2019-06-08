@@ -24,8 +24,8 @@
                 <div class="card-body col-md-8 offset-md-2">
                     <form action="{!! $route !!}" method="POST">
                         @csrf
-                        @if(session('pathInput'))
-                            {{ $patchInput }}
+                        @if($patchInput)
+                            {!! $patchInput !!}
                         @endif
                         <input type="hidden" name="id" value="{{ $user->id }}">
                         <div class="form-group row">

@@ -89,7 +89,6 @@
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="{{ route('users.index') }}">{{ __('Consultar usuarios') }}</a>
-
                                     @if(Route::current()->getName() != 'register')
                                         <div class="dropdown-divider"></div>
                                         <a class="dropdown-item" href="{{ route('register') }}">{{ __('Registrar usuario') }}</a>
@@ -121,19 +120,17 @@
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
 
-                                    @if(Auth::user()->role != 'admin')
-                                        <a class="dropdown-item" href="{{ route('profile') }}">{{ __('Perfil de usuario') }}</a>
-                                            <div class="dropdown-divider"></div>
-                                    @else
-                                        @if(Route::current()->getName() != 'register')
-                                            <a class="dropdown-item" href="{{ route('register') }}">{{ __('Registrar usuario') }}</a>
-                                                <div class="dropdown-divider"></div>
-                                        @endif
-                                        <a class="dropdown-item" href="{{ route('users.index') }}">{{ __('Gestionar usuarios') }}</a>
+                                    <a class="dropdown-item" href="{{ route('editProfileView') }}">{{ __('Editar datos') }}</a>
+                                        <div class="dropdown-divider"></div>
+                                    <!-- @if(Route::current()->getName() != 'register')
+                                        <a class="dropdown-item" href="{{ route('register') }}">{{ __('Registrar usuario') }}</a>
                                             <div class="dropdown-divider"></div>
                                     @endif
+                                    <a class="dropdown-item" href="{{ route('users.index') }}">{{ __('Gestionar usuarios') }}</a>
+                                        <div class="dropdown-divider"></div> -->
+
                                     <a class="dropdown-item" href="{{ route('logout') }}"
-                                    onclick="event.preventDefault();
+                                        onclick="event.preventDefault();
                                                     document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
                                     </a>
